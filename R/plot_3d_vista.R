@@ -1,8 +1,8 @@
 
 #' param
 #' @export
-plot_3d_view <- function(lat, long, radius=10000, elevation_detail=14,
-                         overlay_detail=14, zscale=15,
+plot_3d_vista <- function(lat, long, radius=5000, elevation_detail=14,
+                         overlay_detail=14, zscale=3,
                          img_provider ="Esri.WorldImagery",
                          cache_dir=tempdir(), ...){
 

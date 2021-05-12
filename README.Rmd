@@ -7,26 +7,25 @@ output:
 editor_options: 
   chunk_output_type: console
 ---
-rayshader<img src="man/figures/raylogosmall.png" align="right" />
+rayshader<img src="man/figures/hex_HR.png" width="30%" />
 =========================================================
-<img src="man/figures/smallhobart.gif" ></img>
 
-Overview
+Introduction
 --------
 
-**rayshader** is an open source package for producing 2D and 3D data visualizations in R. **rayshader** uses elevation data in a base R matrix and a combination of raytracing, spherical texture mapping, overlays, and ambient occlusion to generate beautiful topographic 2D and 3D maps. In addition to maps, **rayshader** also allows the user to translate **ggplot2** objects into beautiful 3D data visualizations.
+**rayvista** is a rayshader extension
 
-The models can be rotated and examined interactively or the camera movement can be scripted to create animations. Scenes can also be rendered using a high-quality pathtracer, **rayrender**.The user can also create a cinematic depth of field post-processing effect to direct the user's focus to important regions in the figure. The 3D models can also be exported to a 3D-printable format with a built-in STL export function. 
 
 Installation
 ------------
 
 ``` r
-# To install the latest version from Github:
 # install.packages("devtools")
-devtools::install_github("tylermorganwall/rayshader")
+devtools::install_github("h-a-graham/rayvista")
 ```
 
+Examples
+------------
 ```{r setup, include = FALSE}
 library(knitr)
 library(rgl)
@@ -38,18 +37,19 @@ knitr::opts_chunk$set(
 set.seed(1001)
 ```
 
-```{r README_basicmapping}
-library()
-library(rayshader)
-#Here, I load a map with the raster package.
-loadzip = tempfile() 
-download.file("https://tylermw.com/data/dem_01.tif.zip", loadzip)
-localtif = raster::raster(unzip(loadzip, "dem_01.tif"))
-unlink(loadzip)
-#And convert it to a matrix:
-elmat = raster_to_matrix(localtif)
-#We use another one of rayshader's built-in textures:
-elmat %>%
-  sphere_shade(texture = "desert") %>%
-  plot_map()
+```{r GoraBolshayaUdina, message=FALSE, warning=FALSE, results='hide'}
+# Make sure to so you can interact with the {rgl} window after running `plot_3d_vista()`
+library(rayshader) 
+library(rayvista)
+
+plot_3d_vista(lat=55.757338, long=160.526712)
+
+render_snapshot(clear=TRUE)
+```
+
+
+```{r Yosemite, message=FALSE, warning=FALSE, results='hide'}
+plot_3d_vista(lat=37.742501, long=-119.558298, zscale=5)
+
+render_snapshot(clear=TRUE)
 ```
