@@ -11,7 +11,8 @@ download_elevation <- function(bounds_sf, z, cache_dir){
     message('Retrieving cached data...')
     ras <- readRDS(cachepath)
   } else {
-    ras <- elevatr::get_elev_raster(bounds_sf, z=z, clip='bbox', neg_to_na = TRUE)
+    ras <- elevatr::get_elev_raster(bounds_sf, z=z, clip='bbox', neg_to_na = TRUE,
+                                    verbose = F)
     saveRDS(ras, file = cachepath)
   }
 

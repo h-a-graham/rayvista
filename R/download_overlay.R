@@ -3,13 +3,9 @@ download_overlay <- function(bounds_sf, zoomlevel, cache_dir, image_provider){
   # dowload tiles and compose raster (SpatRaster)
   nc_esri <- maptiles::get_tiles(x = bounds_sf, provider = image_provider,
                                  crop = TRUE, cachedir = cache_dir,
-                                 verbose = TRUE, zoom=zoomlevel)
+                                 verbose = F, zoom=zoomlevel)
   # return(nc_esri)
   tile_dim <- dim(nc_esri)
-
-  # vsp <- as(bounds_sf, "Spatial")
-  # v <- terra::vect(vsp)
-  # nc_esri <- terra::crop(nc_esri, v, snap="out")
 
   new_bbox <- sf::st_bbox(c(xmin=terra::bbox(nc_esri)[1],
                             ymin=terra::bbox(nc_esri)[2],
