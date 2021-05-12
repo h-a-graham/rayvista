@@ -7,13 +7,27 @@ output:
 editor_options: 
   chunk_output_type: console
 ---
-rayshader<img src="man/figures/hex_HR.png" width="30%" />
+rayvista
 =========================================================
+<p align="center">
+<img src="man/figures/hex_HR.png" width="30%" />
+</p>
 
 Introduction
 --------
 
-**rayvista** is a rayshader extension
+**rayvista** is an R package providing a small plugin for the fabulous 
+[{rayshader}](https://github.com/tylermorganwall/rayshader) package. It provides
+a single function `plot_3d_vista()` which allows the user to create a 3D 
+visualisation of any location on earth. It is reliant on two other brilliant 
+packages: [{maptiles}](https://github.com/riatelab/maptiles) and 
+[{elevatr}](https://github.com/jhollist/elevatr). The many available map styles
+from {maptiles} can be easily overlaid on top of elevation data from {elevatr} 
+to create the 3D scene or vista :wink:
+
+An [{rgl}](https://github.com/cran/rgl) window is opened which displays the vista
+and the user may then interact with it using a selection of functions provided
+by {rayshader} including: 
 
 
 Installation
@@ -37,19 +51,30 @@ knitr::opts_chunk$set(
 set.seed(1001)
 ```
 
-```{r GoraBolshayaUdina, message=FALSE, warning=FALSE, results='hide'}
-# Make sure to so you can interact with the {rgl} window after running `plot_3d_vista()`
+
+```{r BlaBheinn, message=FALSE, warning=FALSE, results='hide'}
+# Make sure to lod rayshader so you can interact with the {rgl} window after 
+# running `plot_3d_vista()`
 library(rayshader) 
 library(rayvista)
 
-plot_3d_vista(lat=55.757338, long=160.526712)
+plot_3d_vista(lat=57.219566, long=-6.092690)
+
+render_snapshot(clear=TRUE)
+```
+
+
+```{r GoraBolshayaUdina, message=FALSE, warning=FALSE, results='hide'}
+
+plot_3d_vista(lat=55.757338, long=160.526712, phi=20)
 
 render_snapshot(clear=TRUE)
 ```
 
 
 ```{r Yosemite, message=FALSE, warning=FALSE, results='hide'}
-plot_3d_vista(lat=37.742501, long=-119.558298, zscale=5)
+plot_3d_vista(lat=37.742501, long=-119.558298, zscale=5, zoom=0.5, theta=-65,
+              phi=25)
 
 render_snapshot(clear=TRUE)
 ```

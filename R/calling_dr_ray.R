@@ -6,4 +6,9 @@ calling_dr_ray <- function(overlay, elevation, z_sale, ...){
   rayshader::plot_3d(overlay, elmat, zscale=z_sale, ...)
 
   Sys.sleep(0.2)
+
+  attr(elmat, "extent") = raster::extent(elevation)
+  attr(elmat, "crs") = sf::st_crs(3857)$wkt
+
+  return(elmat)
 }

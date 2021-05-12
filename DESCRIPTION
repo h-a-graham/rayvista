@@ -1,12 +1,29 @@
 Package: rayvista
 Type: Package
-Title: What the Package Does (Title Case)
+Title: A {rayshader} plugin to simplify plotting 3d elevation with map overlays.
 Version: 0.1.0
-Author: Who wrote it
+Authors@R: 
+    person(given = "Hugh",
+           family = "Graham",
+           role = c("aut", "cre"),
+           email = "hugh.a.graham@gmail.com",
+           comment = c(ORCID = "https://orcid.org/0000-0001-9451-5010"))
 Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Description: This package provides a simple function to plot the elvation around
+  a given lat lon location with a specified sarch radius with a map overlay draped
+  over the terrain. terrain data is aquired via {elevatr} and map data is from 
+  {maptiles}.
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
+Imports:
+  rayshader,
+  sf,
+  maptiles,
+  elevatr,
+  magrittr,
+  raster,
+  terra
+Depends: 
+    R (>= 2.10)
