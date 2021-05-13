@@ -14,6 +14,7 @@ plot_3d_vista(
   zscale = 2,
   cache_dir = tempdir(),
   outlier_filter = NULL,
+  epsg = 4326,
   ...
 )
 }
@@ -48,10 +49,13 @@ closes.}
 
 \item{outlier_filter}{numeric between (0:1). default is NULL. sometimes the
 returned terrain data has erroneous low values. if this occurs set this value
-to 0.001 or similar to remove 1% of the lowest values.}
+to 0.001 or similar to remove 1\% of the lowest values.}
 
 \item{...}{arguments passed to `rayshader::plot_3d` you'll want use some of
 these!}
+}
+\value{
+A elevation matrix including 'extent' and 'crs' attributes.
 }
 \description{
 This function is a plugin for the {rayshader} package. It opens an {rgl}

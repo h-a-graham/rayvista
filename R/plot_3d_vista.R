@@ -26,7 +26,7 @@
 #' closes.
 #' @param outlier_filter numeric between (0:1). default is NULL. sometimes the
 #' returned terrain data has erroneous low values. if this occurs set this value
-#' to 0.001 or similar to remove 1% of the lowest values.
+#' to 0.001 or similar to remove 1\% of the lowest values.
 #' @param ... arguments passed to `rayshader::plot_3d` you'll want use some of
 #' these!
 #' @details
@@ -52,7 +52,7 @@
 #' "CartoDB.VoyagerOnlyLabels", "OpenTopoMap","HikeBike", "Wikimedia"
 #' see `maptiles::get_tiles` for more info. Thunderforst maps not currently
 #' supported.
-#'
+#' @return A elevation matrix including 'extent' and 'crs' attributes.
 #' @export
 #' @examples
 #' .lat <- 57.21956608144513
@@ -64,13 +64,13 @@
 plot_3d_vista <- function(lat, long, radius=7000, elevation_detail=13,
                          overlay_detail=14, img_provider ="Esri.WorldImagery",
                          zscale=2, cache_dir=tempdir(),
-                         outlier_filter=NULL, ...){
+                         outlier_filter=NULL, epsg=4326, ...){
 
   #set up cache folder
   cache_sub <- file.path(cache_dir, 'rayvista_cache')
   if (!dir.exists(cache_sub)) dir.create(cache_sub)
 
-  req_extent <- define_extent(lat=lat, long=long, radius=radius)
+  req_extent <- define_extent(lat=lat, long=long, radius=radius, epsg=epsg)
 
   map_overlay <- download_overlay(req_extent, overlay_detail, cache_sub,
                                   img_provider)
@@ -78,7 +78,7 @@ plot_3d_vista <- function(lat, long, radius=7000, elevation_detail=13,
   elevation_ras <- download_elevation(map_overlay$new_bounds, elevation_detail,
                                       cache_sub, outlier_filter)
 
-  elev_mat <- calling_dr_ray(map_overlay$overlay, elevation_ras, zscale, ...)
+  elev_mat <- calling_dr_ray(map_overlay$overlay, elevation_ras, zscale, epsg, ...)
 
   return(elev_mat)
 

@@ -18,7 +18,7 @@ Introduction
 
 **rayvista** is an R package providing a small plugin for the fabulous 
 [{rayshader}](https://github.com/tylermorganwall/rayshader) package. It provides
-a single function `plot_3d_vista()` which allows the user to create a 3D 
+a single main function `plot_3d_vista` which allows the user to create a 3D 
 visualisation of any location on earth. It is reliant on two other brilliant 
 packages: [{maptiles}](https://github.com/riatelab/maptiles) and 
 [{elevatr}](https://github.com/jhollist/elevatr). The many available map styles
@@ -27,7 +27,13 @@ to create the 3D scene or vista :wink:
 
 An [{rgl}](https://github.com/cran/rgl) window is opened which displays the vista
 and the user may then interact with it using a selection of functions provided
-by {rayshader} including: 
+by {rayshader} including: `render_snapshot`, `render_highquality`, 
+`render_compass`, etc. see the [rayshader function reference](https://www.rayshader.com/reference/index.html)
+for more details...
+
+This package is in its early days so there will no doubt be some issues. Please
+feel free to submit an [issue](https://github.com/h-a-graham/rayvista/issues) 
+or start up a [discussion]()
 
 
 Installation
@@ -37,6 +43,14 @@ Installation
 # install.packages("devtools")
 devtools::install_github("h-a-graham/rayvista")
 ```
+
+Functions
+------------
+For now there are only two exported functions:
+
+`plot_3d_vista` which generates the 3D scene
+
+`render_attributes` applies data attribute labels to rgl window
 
 Examples
 ------------
@@ -58,9 +72,20 @@ set.seed(1001)
 library(rayshader) 
 library(rayvista)
 
-plot_3d_vista(lat=57.219566, long=-6.092690)
+.lat <- 57.21956608144513
+.long <- -6.092690805001252
 
+cuillins <- plot_3d_vista(lat = .lat, long = .long, phi=30)
+
+coords <- get_coords_3857(lat=.lat, lon =.lon )
+
+render_label(heightmap= cuillins, text='Bla Bheinn: 928 m', lat = coords$lat,
+             long=coords$long, extent = attr(cuillins, 'extent'),altitude=300, 
+             textcolor='black',freetype=F, zscale = 2)
+
+render_compass()
 render_snapshot(clear=TRUE)
+
 ```
 
 
@@ -68,7 +93,7 @@ render_snapshot(clear=TRUE)
 
 plot_3d_vista(lat=55.757338, long=160.526712, phi=20)
 
-render_snapshot(clear=TRUE)
+render_depth(focus=0.4, focallength = 0.6,clear=TRUE)
 ```
 
 
@@ -76,5 +101,11 @@ render_snapshot(clear=TRUE)
 plot_3d_vista(lat=37.742501, long=-119.558298, zscale=5, zoom=0.5, theta=-65,
               phi=25)
 
-render_snapshot(clear=TRUE)
+render_highquality(lightdirection = c(60,120, 240),
+                   lightaltitude=c(90,25, 12),
+                   lightintensity=c(100, 500, 450),
+                   lightcolor = c("white", "#FF9956", "#FF79E7"),
+                   clear=TRUE)
 ```
+
+
