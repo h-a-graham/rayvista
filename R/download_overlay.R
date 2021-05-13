@@ -20,6 +20,7 @@ download_overlay <- function(bounds_sf, zoomlevel, cache_dir, image_provider){
 
     new_bbox <- readRDS(bbox_cache)
   } else {
+    message('Donloading Overlay...')
   # dowload tiles and compose raster (SpatRaster)
   nc_esri <- maptiles::get_tiles(x = bounds_sf, provider = image_provider,
                                  crop = TRUE, cachedir = cache_dir,

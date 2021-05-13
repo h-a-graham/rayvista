@@ -8,14 +8,15 @@
 #' @param long numeric vecotr of deegrees longitude (WGS84)
 #' @param radius numeric vector - the search radius which will define the
 #' bounding box area.
-#' @param elevation_detail integer between (0:14) passed to
+#' @param elevation_detail Default is `13`. Integer between (0:14) passed to
 #' `elevatr::get_elevation_raster`. determines the resolution of the returned
 #' DEM. see details...
-#' @param overlay_detail integer between (0:20) passed to `maptiles::get_tiles`
+#' @param overlay_detail Default is `14`. Integer between (0:20) passed to
+#' `maptiles::get_tiles`
 #' This determines the detail of the imagery. see details...
-#' @param img_provider the name of the tile server provider
-#' e.g ('Esri.WorldImagery', 'OpenStreetMap). See details
-#' @param zscale passed to `rayshader::plot_3d`: Default '1'. The ratio between
+#' @param img_provider Default is 'Esri.WorldImagery'. The name of the tile
+#' server provider. See details for other options
+#' @param zscale passed to `rayshader::plot_3d`: Default is `2`. The ratio between
 #' the x and y spacing (which are assumed to be equal) and the z axis. For
 #' example, if the elevation levels are in units of 1 meter and the grid values
 #' are separated by 10 meters, 'zscale' would be 10. Adjust the zscale down to
@@ -24,11 +25,18 @@
 #' @param cache_dir default is `tempdir()` but you can save your cache locally
 #' if desired. if using `tempdir()`, data will be removed when the R session
 #' closes.
-#' @param outlier_filter numeric between (0:1). default is NULL. sometimes the
+#' @param fill_holes Default `TRUE`. Fills NA values in DEM. Can slow in coastal
+#' regions, in which case set to FALSE. If NAs present in raster,
+#' `rayrender::render_scalebar` may not work.
+#' @param outlier_filter numeric between `(0:1)`. default is NULL. sometimes the
 #' returned terrain data has erroneous low values. if this occurs set this value
 #' to 0.001 or similar to remove 1\% of the lowest values.
+#' @param epsg default is `4326`. This is EPSG value for the input coordinates
+#' and is used to define the returned matrix's extent attribute.
 #' @param ... arguments passed to `rayshader::plot_3d` you'll want use some of
 #' these!
+#' @return A matrix with three attributes: 'extent', 'crs' and 'resolution'.
+#' Resolution is provided in m regardless of the requested crs.
 #' @details
 #' elevation_detail: For details on zoom and resolution see the documentation
 #' from Mapzen at https://github.com/tilezen/joerd/blob/master/docs/data-sources.md#what-is-the-ground-resolution.
@@ -63,7 +71,7 @@
 
 plot_3d_vista <- function(lat, long, radius=7000, elevation_detail=13,
                          overlay_detail=14, img_provider ="Esri.WorldImagery",
-                         zscale=2, cache_dir=tempdir(),
+                         zscale=2, cache_dir=tempdir(), fill_holes=TRUE,
                          outlier_filter=NULL, epsg=4326, ...){
 
   #set up cache folder
@@ -76,7 +84,7 @@ plot_3d_vista <- function(lat, long, radius=7000, elevation_detail=13,
                                   img_provider)
 
   elevation_ras <- download_elevation(map_overlay$new_bounds, elevation_detail,
-                                      cache_sub, outlier_filter)
+                                      cache_sub, outlier_filter, fill_holes)
 
   elev_mat <- calling_dr_ray(map_overlay$overlay, elevation_ras, zscale, epsg, ...)
 

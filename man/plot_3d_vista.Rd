@@ -13,6 +13,7 @@ plot_3d_vista(
   img_provider = "Esri.WorldImagery",
   zscale = 2,
   cache_dir = tempdir(),
+  fill_holes = TRUE,
   outlier_filter = NULL,
   epsg = 4326,
   ...
@@ -26,17 +27,18 @@ plot_3d_vista(
 \item{radius}{numeric vector - the search radius which will define the
 bounding box area.}
 
-\item{elevation_detail}{integer between (0:14) passed to
+\item{elevation_detail}{Default is `13`. Integer between (0:14) passed to
 `elevatr::get_elevation_raster`. determines the resolution of the returned
 DEM. see details...}
 
-\item{overlay_detail}{integer between (0:20) passed to `maptiles::get_tiles`
+\item{overlay_detail}{Default is `14`. Integer between (0:20) passed to
+`maptiles::get_tiles`
 This determines the detail of the imagery. see details...}
 
-\item{img_provider}{the name of the tile server provider
-e.g ('Esri.WorldImagery', 'OpenStreetMap). See details}
+\item{img_provider}{Default is 'Esri.WorldImagery'. The name of the tile
+server provider. See details for other options}
 
-\item{zscale}{passed to `rayshader::plot_3d`: Default '1'. The ratio between
+\item{zscale}{passed to `rayshader::plot_3d`: Default is `2`. The ratio between
 the x and y spacing (which are assumed to be equal) and the z axis. For
 example, if the elevation levels are in units of 1 meter and the grid values
 are separated by 10 meters, 'zscale' would be 10. Adjust the zscale down to
@@ -47,14 +49,24 @@ value...}
 if desired. if using `tempdir()`, data will be removed when the R session
 closes.}
 
-\item{outlier_filter}{numeric between (0:1). default is NULL. sometimes the
+\item{fill_holes}{Default `TRUE`. Fills NA values in DEM. Can slow in coastal
+regions, in which case set to FALSE. If NAs present in raster,
+`rayrender::render_scalebar` may not work.}
+
+\item{outlier_filter}{numeric between `(0:1)`. default is NULL. sometimes the
 returned terrain data has erroneous low values. if this occurs set this value
 to 0.001 or similar to remove 1\% of the lowest values.}
+
+\item{epsg}{default is `4326`. This is EPSG value for the input coordinates
+and is used to define the returned matrix's extent attribute.}
 
 \item{...}{arguments passed to `rayshader::plot_3d` you'll want use some of
 these!}
 }
 \value{
+A matrix with three attributes: 'extent', 'crs' and 'resolution'.
+Resolution is provided in m regardless of the requested crs.
+
 A elevation matrix including 'extent' and 'crs' attributes.
 }
 \description{

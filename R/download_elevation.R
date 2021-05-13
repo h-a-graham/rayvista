@@ -1,4 +1,5 @@
-download_elevation <- function(bounds_sf, z, cache_dir, outlier_filter){
+download_elevation <- function(bounds_sf, z, cache_dir, outlier_filter,
+                               fill_holes){
   # get bounds and define cache naming
   bounds <- sf::st_bbox(bounds_sf)
 
@@ -12,12 +13,18 @@ download_elevation <- function(bounds_sf, z, cache_dir, outlier_filter){
     message('Retrieving cached data...')
     ras <- readRDS(cachepath)
   } else {
-    ras <- elevatr::get_elev_raster(bounds_sf, z=z, clip='bbox', neg_to_na = TRUE,
-                                    verbose = F)
+    ras <- elevatr::get_elev_raster(bounds_sf, z=z, clip='bbox',
+                                    neg_to_na = TRUE, verbose = F)
 
     # if (epsg!=3857){
     #   ras <- raster::projectRaster(ras, crs=sf::st_crs(epsg)$wkt)
     # }
+    if (isTRUE(fill_holes)){
+      if (length(ras[is.na(ras)])>0) {
+        message('Filling NA raster values...')
+        ras <- fill_raster_holes(ras)
+      }
+    }
 
 
     if (!is.null(outlier_filter)){

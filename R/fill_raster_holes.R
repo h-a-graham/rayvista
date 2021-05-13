@@ -10,11 +10,10 @@ fill_raster_holes <- function(ras, width = 9) {
     }
   }
 
-  ras_fill <- ras
-
-  while (length(iod_fill[is.na(iod_fill)]) != 0) {
-    iod_fill <- focal(iod_fill, w = matrix(1,width,width), fun = fill.na,
+  while (length(ras[is.na(ras)]) != 0) {
+    ras <- raster::focal(ras, w = matrix(1,width,width), fun = fill.na,
                       pad = TRUE, na.rm = FALSE, NAonly=T)
-    message(length(iod_fill[is.na(iod_fill)]))
+    # message(length(ras[is.na(ras)]))
   }
+  return(ras)
 }
