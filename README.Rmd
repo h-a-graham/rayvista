@@ -74,9 +74,9 @@ cuillins <- plot_3d_vista(lat = .lat, long = .long, phi=30)
 render_label(heightmap= cuillins, text='Bla Bheinn: 928 m', lat = .lat,
              long=.long, extent = attr(cuillins, 'extent'),altitude=600,
              clear_previous = T, zscale = 2)
-Sys.sleep(0.2)
+
 render_compass()
-Sys.sleep(0.2)
+
 render_scalebar(limits=c(
   round(dim(cuillins)[2]*attr(cuillins, 'resolution')/1000,1)),
   label_unit = 'km')
