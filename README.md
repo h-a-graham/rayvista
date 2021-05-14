@@ -46,8 +46,8 @@ devtools::install_github("h-a-graham/rayvista")
 library(rayshader) 
 library(rayvista)
 
-.lat <- 57.21956608144513
-.long <- -6.092690805001252
+.lat <- 57.219566
+.long <- -6.092690
 
 cuillins <- plot_3d_vista(lat = .lat, long = .long, phi=30)
 

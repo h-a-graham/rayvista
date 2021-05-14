@@ -32,7 +32,8 @@
 #' returned terrain data has erroneous low values. if this occurs set this value
 #' to 0.001 or similar to remove 1\% of the lowest values.
 #' @param epsg default is `4326`. This is EPSG value for the input coordinates
-#' and is used to define the returned matrix's extent attribute.
+#' and is used to define the returned matrix's extent attribute. HERE BE
+#' DRAGONS! the use of other crs values is very experimental...
 #' @param ... arguments passed to `rayshader::plot_3d` you'll want use some of
 #' these!
 #' @return A matrix with four attributes: 'extent', 'crs' and 'resolution' and
