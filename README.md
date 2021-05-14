@@ -75,8 +75,8 @@ render_depth(focus=0.4, focallength = 30, clear=TRUE)
 ![](man/figures/GoraBolshayaUdina-1.png)<!-- -->
 
 ``` r
-Yosemite <- plot_3d_vista(lat=37.742501, long=-119.558298, zscale=5, zoom=0.5, theta=-65,
-              phi=25)
+Yosemite <- plot_3d_vista(lat=37.742501, long=-119.558298, zscale=5, zoom=0.5, 
+                          theta=-65, windowsize =1200, phi=25)
 
 render_highquality(clear=TRUE)
 ```
