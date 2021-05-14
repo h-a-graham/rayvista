@@ -24,6 +24,7 @@ Imports:
   elevatr,
   magrittr,
   raster,
-  terra
+  terra,
+  geosphere
 Depends: 
     R (>= 2.10)
