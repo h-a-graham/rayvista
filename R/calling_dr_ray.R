@@ -1,4 +1,4 @@
-calling_dr_ray <- function(overlay, elevation, z_sale, epsg, ...){
+calling_dr_ray <- function(overlay, elevation, z_sale, epsg, mt_provider, ...){
 
   elmat = rayshader::raster_to_matrix(elevation)
 
@@ -17,6 +17,7 @@ calling_dr_ray <- function(overlay, elevation, z_sale, epsg, ...){
 
   attr(elmat, "crs") = sf::st_crs(epsg)$wkt
   attr(elmat, "resolution") = raster::xres(elevation)
+  attr(elmat, "attribution") = attribution(mt_provider)
 
   return(elmat)
 }

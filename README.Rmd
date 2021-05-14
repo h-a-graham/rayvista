@@ -31,6 +31,8 @@ by {rayshader} including: `render_snapshot`, `render_highquality`,
 `render_compass`, etc. see the [rayshader function reference](https://www.rayshader.com/reference/index.html)
 for more details...
 
+You can access the data attribution from the returned matrix object.
+
 This package is in its early days so there will no doubt be some issues. Please
 feel free to submit an [issue](https://github.com/h-a-graham/rayvista/issues) 
 or start up a [discussion]()
@@ -43,14 +45,6 @@ Installation
 # install.packages("devtools")
 devtools::install_github("h-a-graham/rayvista")
 ```
-
-Functions
-------------
-For now there are only two exported functions:
-
-`plot_3d_vista` which generates the 3D scene
-
-`render_attributes` applies data attribute labels to rgl window
 
 Examples
 ------------
@@ -77,13 +71,16 @@ library(rayvista)
 
 cuillins <- plot_3d_vista(lat = .lat, long = .long, phi=30)
 
-coords <- get_coords_3857(lat=.lat, lon =.lon )
-
-render_label(heightmap= cuillins, text='Bla Bheinn: 928 m', lat = coords$lat,
-             long=coords$long, extent = attr(cuillins, 'extent'),altitude=300, 
-             textcolor='black',freetype=F, zscale = 2)
-
+render_label(heightmap= cuillins, text='Bla Bheinn: 928 m', lat = .lat,
+             long=.long, extent = attr(cuillins, 'extent'),altitude=600,
+             clear_previous = T, zscale = 2)
+Sys.sleep(0.2)
 render_compass()
+Sys.sleep(0.2)
+render_scalebar(limits=c(
+  round(dim(cuillins)[2]*attr(cuillins, 'resolution')/1000,1)),
+  label_unit = 'km')
+
 render_snapshot(clear=TRUE)
 
 ```
@@ -91,15 +88,24 @@ render_snapshot(clear=TRUE)
 
 ```{r GoraBolshayaUdina, message=FALSE, warning=FALSE, results='hide'}
 
-plot_3d_vista(lat=55.757338, long=160.526712, phi=20)
+GoraBolshayaUdina <- plot_3d_vista(lat=55.757338, long=160.526712, zscale=4, phi=20)
 
-render_depth(focus=0.4, focallength = 0.6,clear=TRUE)
+render_depth(focus=0.4, focallength = 30, clear=TRUE)
 ```
 
 
 ```{r Yosemite, message=FALSE, warning=FALSE, results='hide'}
-plot_3d_vista(lat=37.742501, long=-119.558298, zscale=5, zoom=0.5, theta=-65,
+Yosemite <- plot_3d_vista(lat=37.742501, long=-119.558298, zscale=5, zoom=0.5, theta=-65,
               phi=25)
+
+render_highquality(clear=TRUE)
+```
+
+```{r HopkinsNZ, message=FALSE, warning=FALSE, results='hide'}
+HopkinsNZ <- plot_3d_vista(lat=-44.042238, long=169.860985, radius=5000, overlay_detail = 14,
+             elevation_detail=13, zscale=5, img_provider = 'OpenStreetMap',
+             cache_dir = 'testing',theta=25, phi=25, zoom=0.5,
+             windowsize =1200, solid=T, background='grey10')
 
 render_highquality(lightdirection = c(60,120, 240),
                    lightaltitude=c(90,25, 12),
@@ -107,5 +113,4 @@ render_highquality(lightdirection = c(60,120, 240),
                    lightcolor = c("white", "#FF9956", "#FF79E7"),
                    clear=TRUE)
 ```
-
 

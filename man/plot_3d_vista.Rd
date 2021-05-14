@@ -27,7 +27,7 @@ plot_3d_vista(
 \item{radius}{numeric vector - the search radius which will define the
 bounding box area.}
 
-\item{elevation_detail}{Default is `13`. Integer between (0:14) passed to
+\item{elevation_detail}{Default is `13`. Integer between (0:15) passed to
 `elevatr::get_elevation_raster`. determines the resolution of the returned
 DEM. see details...}
 
@@ -64,8 +64,8 @@ and is used to define the returned matrix's extent attribute.}
 these!}
 }
 \value{
-A matrix with three attributes: 'extent', 'crs' and 'resolution'.
-Resolution is provided in m regardless of the requested crs.
+A matrix with four attributes: 'extent', 'crs' and 'resolution' and
+'attribution. Resolution is provided in m regardless of the requested crs.
 
 A elevation matrix including 'extent' and 'crs' attributes.
 }

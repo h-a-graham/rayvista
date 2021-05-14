@@ -21,7 +21,7 @@ download_elevation <- function(bounds_sf, z, cache_dir, outlier_filter,
     # }
     if (isTRUE(fill_holes)){
       if (length(ras[is.na(ras)])>0) {
-        message('Filling NA raster values...')
+        message('Filling NA raster values... If this is very slow use `fill_holes=FALSE`')
         ras <- fill_raster_holes(ras)
       }
     }

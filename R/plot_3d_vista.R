@@ -8,7 +8,7 @@
 #' @param long numeric vecotr of deegrees longitude (WGS84)
 #' @param radius numeric vector - the search radius which will define the
 #' bounding box area.
-#' @param elevation_detail Default is `13`. Integer between (0:14) passed to
+#' @param elevation_detail Default is `13`. Integer between (0:15) passed to
 #' `elevatr::get_elevation_raster`. determines the resolution of the returned
 #' DEM. see details...
 #' @param overlay_detail Default is `14`. Integer between (0:20) passed to
@@ -35,8 +35,8 @@
 #' and is used to define the returned matrix's extent attribute.
 #' @param ... arguments passed to `rayshader::plot_3d` you'll want use some of
 #' these!
-#' @return A matrix with three attributes: 'extent', 'crs' and 'resolution'.
-#' Resolution is provided in m regardless of the requested crs.
+#' @return A matrix with four attributes: 'extent', 'crs' and 'resolution' and
+#' 'attribution. Resolution is provided in m regardless of the requested crs.
 #' @details
 #' elevation_detail: For details on zoom and resolution see the documentation
 #' from Mapzen at https://github.com/tilezen/joerd/blob/master/docs/data-sources.md#what-is-the-ground-resolution.
@@ -86,7 +86,8 @@ plot_3d_vista <- function(lat, long, radius=7000, elevation_detail=13,
   elevation_ras <- download_elevation(map_overlay$new_bounds, elevation_detail,
                                       cache_sub, outlier_filter, fill_holes)
 
-  elev_mat <- calling_dr_ray(map_overlay$overlay, elevation_ras, zscale, epsg, ...)
+  elev_mat <- calling_dr_ray(map_overlay$overlay, elevation_ras, zscale, epsg,
+                             img_provider, ...)
 
   return(elev_mat)
 
