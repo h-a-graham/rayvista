@@ -16,6 +16,7 @@ plot_3d_vista(
   fill_holes = TRUE,
   outlier_filter = NULL,
   epsg = 4326,
+  show_vista = TRUE,
   ...
 )
 }
@@ -60,6 +61,10 @@ to 0.001 or similar to remove 1\% of the lowest values.}
 \item{epsg}{default is `4326`. This is EPSG value for the input coordinates
 and is used to define the returned matrix's extent attribute. HERE BE
 DRAGONS! the use of other crs values is very experimental...}
+
+\item{show_vista}{default is `TRUE`. If FALSE then no rgl window is opened.
+Instead, the texture (image array) and elevation matrix are returned in a
+named list with names: 'texture' and 'dem_matrix'}
 
 \item{...}{arguments passed to `rayshader::plot_3d` you'll want use some of
 these!}
