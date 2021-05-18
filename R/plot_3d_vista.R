@@ -34,6 +34,9 @@
 #' @param epsg default is `4326`. This is EPSG value for the input coordinates
 #' and is used to define the returned matrix's extent attribute. HERE BE
 #' DRAGONS! the use of other crs values is very experimental...
+#' @param show_vista default is `TRUE`. If FALSE then no rgl window is opened.
+#' Instead, the texture (image array) and elevation matrix are returned in a
+#' named list with names: 'texture' and 'dem_matrix'
 #' @param ... arguments passed to `rayshader::plot_3d` you'll want use some of
 #' these!
 #' @return A matrix with four attributes: 'extent', 'crs' and 'resolution' and
@@ -73,7 +76,7 @@
 plot_3d_vista <- function(lat, long, radius=7000, elevation_detail=13,
                          overlay_detail=14, img_provider ="Esri.WorldImagery",
                          zscale=2, cache_dir=tempdir(), fill_holes=TRUE,
-                         outlier_filter=NULL, epsg=4326, ...){
+                         outlier_filter=NULL, epsg=4326, show_vista=TRUE, ...){
 
   #set up cache folder
   cache_sub <- file.path(cache_dir, 'rayvista_cache')
@@ -88,8 +91,13 @@ plot_3d_vista <- function(lat, long, radius=7000, elevation_detail=13,
                                       cache_sub, outlier_filter, fill_holes)
 
   elev_mat <- calling_dr_ray(map_overlay$overlay, elevation_ras, zscale, epsg,
-                             img_provider, ...)
+                             img_provider, show_vista, ...)
 
-  return(elev_mat)
+  if (isTRUE(show_vista)){
+    return(elev_mat)
+  } else {
+    return(list(texture=map_overlay$overlay, dem_matrix=elev_mat))
+  }
+
 
 }

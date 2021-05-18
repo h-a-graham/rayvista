@@ -5,7 +5,7 @@ download_overlay <- function(bounds_sf, zoomlevel, cache_dir, image_provider){
   over_cache <- file.path(cache_dir, paste0('overlay', bounds[1], '_',
                                             bounds[2], '_', bounds[3],'_',
                                             bounds[4], '_' , zoomlevel, '_',
-                                            image_provider, '.png'))
+                                            image_provider,'.png'))
 
   bbox_cache <- file.path(cache_dir, paste0('bbox', bounds[1], '_',
                                             bounds[2], '_', bounds[3],'_',
@@ -53,7 +53,8 @@ download_overlay <- function(bounds_sf, zoomlevel, cache_dir, image_provider){
   overlay_img <- png::readPNG(over_cache)
   }
 
-  overlay_img_contrast <-scales::rescale(overlay_img,to=c(0,1))
+  overlay_img <-scales::rescale(overlay_img,to=c(0,1))
 
-  return(list(overlay=overlay_img_contrast, new_bounds=new_bbox))
+
+  return(list(overlay=overlay_img, new_bounds=new_bbox))
 }
