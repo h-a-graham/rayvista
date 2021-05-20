@@ -97,3 +97,34 @@ render_highquality(lightdirection = c(60,120, 240),
 ```
 
 ![](man/figures/HopkinsNZ-1.png)<!-- -->
+
+``` r
+library(magick)
+# here we don't show the vista - instead we retrieve the texture and matrix by
+# using the argument: 'show_vista = F'.
+sistan_suture<- plot_3d_vista(27.82153210664024, 60.5107976729012,radius=15000,
+                              overlay_detail = 13, elevation_detail=10,
+                              show_vista = FALSE)
+
+# edit the texture using the {magick} package
+temp_img <- tempfile(fileext = '.png')
+png::writePNG(sistan_suture$texture, temp_img)
+mag_img <- magick::image_read(temp_img)
+
+edited_texture <- magick::image_modulate(mag_img, brightness = 90,
+                                 saturation = 40, hue = 280) %>%
+  magick::image_enhance() %>%
+  magick::image_equalize() %>%
+  magick::image_contrast(sharpen = 1)
+
+magick::image_write(edited_texture, temp_img)
+edit_tex <- png::readPNG(temp_img)
+
+#plot directly with rayshader
+rayshader::plot_3d(edit_tex, sistan_suture$dem_matrix, zscale=20,
+                   windowsize = 1200, zoom=0.75, phi=80, theta=0)
+
+render_highquality(lightaltitude = 40, clear=TRUE)
+```
+
+![](man/figures/SistanSuture-1.png)<!-- -->
