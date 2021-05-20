@@ -39,8 +39,11 @@
 #' named list with names: 'texture' and 'dem_matrix'
 #' @param ... arguments passed to `rayshader::plot_3d` you'll want use some of
 #' these!
-#' @return A matrix with four attributes: 'extent', 'crs' and 'resolution' and
-#' 'attribution. Resolution is provided in m regardless of the requested crs.
+#' @return Either:  A matrix with four attributes: 'extent', 'crs' and
+#' 'resolution' and 'attribution'. Resolution is provided in m regardless of
+#' the requested crs. OR if `show_vista = FALSE` then a list is returned
+#' including the named items: 'texture' and 'dem_matrix' which can be used to
+#' customising the vista before using `rayshader::plot_3d`.
 #' @details
 #' elevation_detail: For details on zoom and resolution see the documentation
 #' from Mapzen at https://github.com/tilezen/joerd/blob/master/docs/data-sources.md#what-is-the-ground-resolution.
@@ -74,7 +77,7 @@
 #' rayshader::render_snapshot(clear=TRUE)
 
 plot_3d_vista <- function(lat, long, radius=7000, elevation_detail=13,
-                         overlay_detail=14, img_provider ="Esri.WorldImagery",
+                         overlay_detail=13, img_provider ="Esri.WorldImagery",
                          zscale=2, cache_dir=tempdir(), fill_holes=TRUE,
                          outlier_filter=NULL, epsg=4326, show_vista=TRUE, ...){
 
