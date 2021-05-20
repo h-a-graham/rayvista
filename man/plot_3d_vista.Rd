@@ -9,13 +9,14 @@ plot_3d_vista(
   long,
   radius = 7000,
   elevation_detail = 13,
-  overlay_detail = 14,
+  overlay_detail = 13,
   img_provider = "Esri.WorldImagery",
   zscale = 2,
   cache_dir = tempdir(),
   fill_holes = TRUE,
   outlier_filter = NULL,
   epsg = 4326,
+  show_vista = TRUE,
   ...
 )
 }
@@ -61,12 +62,19 @@ to 0.001 or similar to remove 1\% of the lowest values.}
 and is used to define the returned matrix's extent attribute. HERE BE
 DRAGONS! the use of other crs values is very experimental...}
 
+\item{show_vista}{default is `TRUE`. If FALSE then no rgl window is opened.
+Instead, the texture (image array) and elevation matrix are returned in a
+named list with names: 'texture' and 'dem_matrix'}
+
 \item{...}{arguments passed to `rayshader::plot_3d` you'll want use some of
 these!}
 }
 \value{
-A matrix with four attributes: 'extent', 'crs' and 'resolution' and
-'attribution. Resolution is provided in m regardless of the requested crs.
+Either:  A matrix with four attributes: 'extent', 'crs' and
+'resolution' and 'attribution'. Resolution is provided in m regardless of
+the requested crs. OR if `show_vista = FALSE` then a list is returned
+including the named items: 'texture' and 'dem_matrix' which can be used to
+customising the vista before using `rayshader::plot_3d`.
 
 A elevation matrix including 'extent' and 'crs' attributes.
 }

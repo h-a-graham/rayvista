@@ -35,7 +35,7 @@ Please feel free to submit an
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("h-a-graham/rayvista")
+devtools::install_github("h-a-graham/rayvista", dependencies=TRUE)
 ```
 
 ## Examples
