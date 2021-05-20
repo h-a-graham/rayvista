@@ -1,6 +1,6 @@
 Package: rayvista
 Type: Package
-Title: A {rayshader} plugin to simplify plotting 3d elevation with map overlays.
+Title: A {rayshader} plugin to simplify plotting 3d elevation with map overlays
 Version: 0.1.1
 Authors@R: 
     person(given = "Hugh",
