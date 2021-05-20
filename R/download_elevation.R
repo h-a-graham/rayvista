@@ -13,8 +13,14 @@ download_elevation <- function(bounds_sf, z, cache_dir, outlier_filter,
     message('Retrieving cached data...')
     ras <- readRDS(cachepath)
   } else {
-    ras <- elevatr::get_elev_raster(bounds_sf, z=z, clip='bbox',
-                                    neg_to_na = TRUE, verbose = F)
+
+    retrieve_dem <- function(){
+      elevatr::get_elev_raster(bounds_sf, z=z, clip='bbox',
+                               neg_to_na = TRUE, verbose = F)
+    }
+    rate <- purrr::rate_backoff(max_times = 10)
+    repeat_dem_download <- purrr::insistently(retrieve_dem, rate, quiet=F)
+    ras <-repeat_dem_download()
 
     # if (epsg!=3857){
     #   ras <- raster::projectRaster(ras, crs=sf::st_crs(epsg)$wkt)

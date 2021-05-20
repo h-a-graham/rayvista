@@ -29,7 +29,7 @@ download_overlay <- function(bounds_sf, zoomlevel, cache_dir, image_provider){
                           verbose = F, zoom=zoomlevel)
     }
 
-    rate <- purrr::rate_backoff(max_times = 5)
+    rate <- purrr::rate_backoff(max_times = 10)
     repeat_tile_download <- purrr::insistently(retrieve_tiles, rate, quiet=F)
 
     nc_esri <- repeat_tile_download()
