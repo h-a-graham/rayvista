@@ -14,6 +14,7 @@ download_elevation <- function(bounds_sf, z, cache_dir, outlier_filter,
     ras <- readRDS(cachepath)
   } else {
 
+    # download function - insistently request up to 10 times.
     retrieve_dem <- function(){
       elevatr::get_elev_raster(bounds_sf, z=z, clip='bbox',
                                neg_to_na = TRUE, verbose = F)
@@ -22,9 +23,7 @@ download_elevation <- function(bounds_sf, z, cache_dir, outlier_filter,
     repeat_dem_download <- purrr::insistently(retrieve_dem, rate, quiet=T)
     ras <-repeat_dem_download()
 
-    # if (epsg!=3857){
-    #   ras <- raster::projectRaster(ras, crs=sf::st_crs(epsg)$wkt)
-    # }
+    # fill holes in DEMS
     if (isTRUE(fill_holes)){
       if (length(ras[is.na(ras)])>0) {
         message('Filling NA raster values... If this is very slow use `fill_holes=FALSE`')
@@ -32,7 +31,7 @@ download_elevation <- function(bounds_sf, z, cache_dir, outlier_filter,
       }
     }
 
-
+    # remove outliers if requested.S
     if (!is.null(outlier_filter)){
       thresh <- raster::quantile(ras, probs = outlier_filter, type=7,names = FALSE)
       ras[ras<thresh] <- NA

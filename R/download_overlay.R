@@ -1,7 +1,10 @@
-download_overlay <- function(bounds_sf, zoomlevel, cache_dir, image_provider){
+download_overlay <- function(bounds_sf, zoomlevel, cache_dir, image_provider,
+                             api_key){
+
   # get bounds and define cache naming
   bounds <- sf::st_bbox(bounds_sf)
 
+  # define cache names.
   over_cache <- file.path(cache_dir, paste0('overlay', bounds[1], '_',
                                             bounds[2], '_', bounds[3],'_',
                                             bounds[4], '_' , zoomlevel, '_',
@@ -10,7 +13,7 @@ download_overlay <- function(bounds_sf, zoomlevel, cache_dir, image_provider){
   bbox_cache <- file.path(cache_dir, paste0('bbox', bounds[1], '_',
                                             bounds[2], '_', bounds[3],'_',
                                             bounds[4], '_' , zoomlevel, '_',
-                                            image_provider, '.png'))
+                                            image_provider, '.rds'))
 
   # check cache filename and if it doesn't exist download data then save.
   if (file.exists(over_cache) && file.exists(bbox_cache)) {
@@ -22,11 +25,19 @@ download_overlay <- function(bounds_sf, zoomlevel, cache_dir, image_provider){
   } else {
     message('Downloading overlay...')
     # dowload tiles and compose raster (SpatRaster)
-    # Now with repeat attempts built in - up to 5.
+    # Now with repeat attempts built in - up to 10.
     retrieve_tiles <- function(){
-      maptiles::get_tiles(x = bounds_sf, provider = image_provider,
-                          crop = TRUE, cachedir = cache_dir,
-                          verbose = F, zoom=zoomlevel)
+      suppressWarnings(
+        if (is.null(api_key)){
+        maptiles::get_tiles(x = bounds_sf, provider = image_provider,
+                                             crop = TRUE, cachedir = cache_dir,
+                                             verbose = F, zoom=zoomlevel)
+      } else {
+        maptiles::get_tiles(x = bounds_sf, provider = image_provider,
+                            crop = TRUE, cachedir = cache_dir,
+                            verbose = F, zoom=zoomlevel, apikey = api_key)
+      })
+
     }
 
     rate <- purrr::rate_backoff(max_times = 10)
@@ -44,20 +55,11 @@ download_overlay <- function(bounds_sf, zoomlevel, cache_dir, image_provider){
 
     saveRDS(new_bbox, file=bbox_cache)
 
-    tile_dim <- dim(nc_esri)
-
-    #export the raster overlay as image.
-    png(over_cache, width = tile_dim[2], height = tile_dim[1])
-    print({
-      maptiles::plot_tiles(nc_esri)
-    })
-    dev.off()
-
-    overlay_img <- png::readPNG(over_cache)
+    #export the raster overlay as image and read it back.
+    suppressWarnings(terra::writeRaster(nc_esri, over_cache, verbose=F))
+    overlay_img <- png::readPNG(over_cache) %>%
+      scales::rescale(.,to=c(0,1))
   }
-
-  overlay_img <-scales::rescale(overlay_img,to=c(0,1))
-
 
   return(list(overlay=overlay_img, new_bounds=new_bbox))
 }
