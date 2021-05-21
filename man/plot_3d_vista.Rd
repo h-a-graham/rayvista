@@ -17,6 +17,7 @@ plot_3d_vista(
   outlier_filter = NULL,
   epsg = 4326,
   show_vista = TRUE,
+  api_key = NULL,
   ...
 )
 }
@@ -66,6 +67,9 @@ DRAGONS! the use of other crs values is very experimental...}
 Instead, the texture (image array) and elevation matrix are returned in a
 named list with names: 'texture' and 'dem_matrix'}
 
+\item{api_key}{default is `NULL`. Only required if requesting thunderforest
+overlay (see details). You can get an API key here: https://www.thunderforest.com/docs/apikeys/}
+
 \item{...}{arguments passed to `rayshader::plot_3d` you'll want use some of
 these!}
 }
@@ -103,9 +107,12 @@ img_provider:
 "CartoDB.Positron", "CartoDB.PositronNoLabels", "CartoDB.PositronOnlyLabels",
 "CartoDB.DarkMatter", "CartoDB.DarkMatterNoLabels",
 "CartoDB.DarkMatterOnlyLabels", "CartoDB.Voyager", "CartoDB.VoyagerNoLabels",
-"CartoDB.VoyagerOnlyLabels", "OpenTopoMap","HikeBike", "Wikimedia"
-see `maptiles::get_tiles` for more info. Thunderforst maps not currently
-supported.
+"CartoDB.VoyagerOnlyLabels", "Thunderforest.OpenCycleMap",
+"Thunderforest.Transport", "Thunderforest.TransportDark",
+"Thunderforest.SpinalMap", "Thunderforest.Landscape",
+"Thunderforest.Outdoors", "Thunderforest.Pioneer",
+"Thunderforest.MobileAtlas", "Thunderforest.Neighbourhood","OpenTopoMap",
+"HikeBike", "Wikimedia".See `maptiles::get_tiles` for more info.
 }
 \examples{
 .lat <- 57.21956608144513

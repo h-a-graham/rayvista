@@ -11,7 +11,7 @@
 #' @param elevation_detail Default is `13`. Integer between (0:15) passed to
 #' `elevatr::get_elevation_raster`. determines the resolution of the returned
 #' DEM. see details...
-#' @param overlay_detail Default is `14`. Integer between (0:20) passed to
+#' @param overlay_detail Default is `13`. Integer between (0:20) passed to
 #' `maptiles::get_tiles`
 #' This determines the detail of the imagery. see details...
 #' @param img_provider Default is 'Esri.WorldImagery'. The name of the tile
@@ -37,6 +37,8 @@
 #' @param show_vista default is `TRUE`. If FALSE then no rgl window is opened.
 #' Instead, the texture (image array) and elevation matrix are returned in a
 #' named list with names: 'texture' and 'dem_matrix'
+#' @param api_key default is `NULL`. Only required if requesting thunderforest
+#' overlay (see details). You can get an API key here: https://www.thunderforest.com/docs/apikeys/
 #' @param ... arguments passed to `rayshader::plot_3d` you'll want use some of
 #' these!
 #' @return Either:  A matrix with four attributes: 'extent', 'crs' and
@@ -64,9 +66,12 @@
 #' "CartoDB.Positron", "CartoDB.PositronNoLabels", "CartoDB.PositronOnlyLabels",
 #' "CartoDB.DarkMatter", "CartoDB.DarkMatterNoLabels",
 #' "CartoDB.DarkMatterOnlyLabels", "CartoDB.Voyager", "CartoDB.VoyagerNoLabels",
-#' "CartoDB.VoyagerOnlyLabels", "OpenTopoMap","HikeBike", "Wikimedia"
-#' see `maptiles::get_tiles` for more info. Thunderforst maps not currently
-#' supported.
+#' "CartoDB.VoyagerOnlyLabels", "Thunderforest.OpenCycleMap",
+#' "Thunderforest.Transport", "Thunderforest.TransportDark",
+#' "Thunderforest.SpinalMap", "Thunderforest.Landscape",
+#' "Thunderforest.Outdoors", "Thunderforest.Pioneer",
+#' "Thunderforest.MobileAtlas", "Thunderforest.Neighbourhood","OpenTopoMap",
+#' "HikeBike", "Wikimedia".See `maptiles::get_tiles` for more info.
 #' @return A elevation matrix including 'extent' and 'crs' attributes.
 #' @export
 #' @examples
@@ -79,23 +84,28 @@
 plot_3d_vista <- function(lat, long, radius=7000, elevation_detail=13,
                          overlay_detail=13, img_provider ="Esri.WorldImagery",
                          zscale=2, cache_dir=tempdir(), fill_holes=TRUE,
-                         outlier_filter=NULL, epsg=4326, show_vista=TRUE, ...){
+                         outlier_filter=NULL, epsg=4326, show_vista=TRUE,
+                         api_key=NULL, ...){
 
-  #set up cache folder
-  cache_sub <- file.path(cache_dir, 'rayvista_cache')
-  if (!dir.exists(cache_sub)) dir.create(cache_sub)
+  # check arguments: For now just returning the finalised cache directory
+  cache_sub <- arg_checks(cache_dir, img_provider, api_key)
 
+  # set up initial extent
   req_extent <- define_extent(lat=lat, long=long, radius=radius, epsg=epsg)
 
+  # get tiles for map overlay
   map_overlay <- download_overlay(req_extent, overlay_detail, cache_sub,
-                                  img_provider)
+                                  img_provider, api_key)
 
+  # get DEM
   elevation_ras <- download_elevation(map_overlay$new_bounds, elevation_detail,
                                       cache_sub, outlier_filter, fill_holes)
 
+  # run rayshader function and or return matrix.
   elev_mat <- calling_dr_ray(map_overlay$overlay, elevation_ras, zscale, epsg,
                              img_provider, show_vista, ...)
 
+  # final returns.
   if (isTRUE(show_vista)){
     return(elev_mat)
   } else {
