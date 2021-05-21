@@ -19,7 +19,7 @@ download_elevation <- function(bounds_sf, z, cache_dir, outlier_filter,
                                neg_to_na = TRUE, verbose = F)
     }
     rate <- purrr::rate_backoff(max_times = 10)
-    repeat_dem_download <- purrr::insistently(retrieve_dem, rate, quiet=F)
+    repeat_dem_download <- purrr::insistently(retrieve_dem, rate, quiet=T)
     ras <-repeat_dem_download()
 
     # if (epsg!=3857){
