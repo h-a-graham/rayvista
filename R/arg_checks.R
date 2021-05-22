@@ -15,9 +15,8 @@ arg_checks <- function(cache_dir, image_provider, api_key){
                             "Thunderforest.Pioneer",
                             "Thunderforest.MobileAtlas",
                             "Thunderforest.Neighbourhood")) {
-    if (is.null(api_key)) stop("A valid API key is required for Thuderforest maps.
-  See: https://www.thunderforest.com/docs/apikeys/")
-
-    return(cache_sub)
+  if (is.null(api_key)) {stop("A valid API key is required for Thuderforest maps.
+  See: https://www.thunderforest.com/docs/apikeys/")}
   }
+  return(cache_sub)
 }
