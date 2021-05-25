@@ -8,8 +8,10 @@ plot_3d_vista(
   lat,
   long,
   radius = 7000,
+  req_area = NULL,
   elevation_detail = 13,
   overlay_detail = 13,
+  elevation_src = "aws",
   img_provider = "Esri.WorldImagery",
   zscale = 2,
   cache_dir = tempdir(),
@@ -29,12 +31,21 @@ plot_3d_vista(
 \item{radius}{numeric vector - the search radius which will define the
 bounding box area.}
 
+\item{req_area}{Default is `NULL`. If desired, you can porvide an {sf} obect
+or an sf readable file path. If used, lat/long/radius are ignored. Must have
+a valid CRS.}
+
 \item{elevation_detail}{Default is `13`. Integer between (0:15) passed to
 `elevatr::get_elevation_raster`. determines the resolution of the returned
 DEM. see details...}
 
-\item{overlay_detail}{Default is `14`. Integer between (0:20) passed to
-`maptiles::get_tiles`
+\item{overlay_detail}{Default is `13`. Integer between (0:20) passed to
+`maptiles::get_tiles`}
+
+\item{elevation_src}{Default is `aws`. passed to `elevatr::get_elev_raster`.
+A character indicating which API to use. Currently supports "aws" and "gl3",
+"gl1", or "alos" from the OpenTopography API global datasets. "aws" is the
+default.
 This determines the detail of the imagery. see details...}
 
 \item{img_provider}{Default is 'Esri.WorldImagery'. The name of the tile
