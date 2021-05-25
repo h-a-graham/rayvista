@@ -18,11 +18,11 @@ define_extent_sf <- function(req_area){
     sf_geom <- sf::read_sf(req_area)
   }
 
-  if (is.na(sf::st_crs(req_area)[1]$input)) {
+  if (is.na(sf::st_crs(sf_geom)[1]$input)) {
     stop("Requested area has no valid projection. Please set a valid CRS.")
   }
 
-  req_area <- req_area %>%
+  req_area <- sf_geom %>%
     sf::st_transform(3857) %>%
     sf::st_bbox() %>%
     sf::st_as_sfc() #%>%
