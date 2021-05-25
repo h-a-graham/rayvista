@@ -8,11 +8,18 @@
 #' @param long numeric vecotr of deegrees longitude (WGS84)
 #' @param radius numeric vector - the search radius which will define the
 #' bounding box area.
+#' @param req_area Default is `NULL`. If desired, you can porvide an {sf} obect
+#' or an sf readable file path. If used, lat/long/radius are ignored. Must have
+#' a valid CRS.
 #' @param elevation_detail Default is `13`. Integer between (0:15) passed to
 #' `elevatr::get_elevation_raster`. determines the resolution of the returned
 #' DEM. see details...
 #' @param overlay_detail Default is `13`. Integer between (0:20) passed to
 #' `maptiles::get_tiles`
+#' @param elevation_src Default is `aws`. passed to `elevatr::get_elev_raster`.
+#' A character indicating which API to use. Currently supports "aws" and "gl3",
+#' "gl1", or "alos" from the OpenTopography API global datasets. "aws" is the
+#' default.
 #' This determines the detail of the imagery. see details...
 #' @param img_provider Default is 'Esri.WorldImagery'. The name of the tile
 #' server provider. See details for other options
@@ -81,9 +88,10 @@
 #' cuillins <- plot_3d_vista(lat = .lat, long = .long)
 #' rayshader::render_snapshot(clear=TRUE)
 
-plot_3d_vista <- function(lat, long, radius=7000, elevation_detail=13,
-                         overlay_detail=13, img_provider ="Esri.WorldImagery",
-                         zscale=2, cache_dir=tempdir(), fill_holes=TRUE,
+plot_3d_vista <- function(lat, long, radius=7000, req_area=NULL, elevation_detail=13,
+                         overlay_detail=13, elevation_src='aws',
+                         img_provider ="Esri.WorldImagery", zscale=2,
+                         cache_dir=tempdir(), fill_holes=TRUE,
                          outlier_filter=NULL, epsg=4326, show_vista=TRUE,
                          api_key=NULL, ...){
 
@@ -91,7 +99,12 @@ plot_3d_vista <- function(lat, long, radius=7000, elevation_detail=13,
   cache_sub <- arg_checks(cache_dir, img_provider, api_key)
 
   # set up initial extent
-  req_extent <- define_extent(lat=lat, long=long, radius=radius, epsg=epsg)
+  if (!is.null(req_area)){
+    req_extent <- define_extent_sf(req_area)
+  } else {
+    req_extent <- define_extent(lat=lat, long=long, radius=radius, epsg=epsg)
+  }
+
 
   # get tiles for map overlay
   map_overlay <- download_overlay(req_extent, overlay_detail, cache_sub,
@@ -99,7 +112,7 @@ plot_3d_vista <- function(lat, long, radius=7000, elevation_detail=13,
 
   # get DEM
   elevation_ras <- download_elevation(map_overlay$new_bounds, elevation_detail,
-                                      cache_sub, outlier_filter, fill_holes)
+                                      elevation_src, cache_sub, outlier_filter, fill_holes)
 
   # run rayshader function and or return matrix.
   elev_mat <- calling_dr_ray(map_overlay$overlay, elevation_ras, zscale, epsg,
