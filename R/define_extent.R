@@ -31,3 +31,28 @@ define_extent_sf <- function(req_area){
 
   return(req_area)
 }
+
+define_extent_dem <- function(dem){
+  # check class of dem for now support terra, raster or raster-readable
+  if (class(dem)[1] == "RasterLayer"){
+    dem_raster <- dem
+  } else if (class(dem)[1] == "SpatRaster") {
+    dem_raster <- raster::raster(dem)
+  } else if (class(dem)[1] == "character"){
+    dem_raster <- raster::raster(dem)
+  } else {
+    stop("the class of argument `dem` is not supported. Use any of the
+         following: terra, raster or raster-readable file path")
+  }
+
+  dem_raster <- raster::projectRaster(dem_raster, crs=sf::st_crs(3857)$wkt)
+
+  dem_ext <- new_bbox <- sf::st_bbox(c(xmin=raster::extent(dem_raster)[1],
+                                       ymin=raster::extent(dem_raster)[3],
+                                       xmax=raster::extent(dem_raster)[2],
+                                       ymax=raster::extent(dem_raster)[4])) %>%
+    sf::st_as_sfc() %>%
+    sf::st_sf(crs=3857)
+
+  return(list(dem=dem_raster, dem_extent = dem_ext))
+}

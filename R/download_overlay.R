@@ -1,5 +1,5 @@
 download_overlay <- function(bounds_sf, zoomlevel, cache_dir, image_provider,
-                             api_key){
+                             api_key, dem){
 
   # get bounds and define cache naming
   bounds <- sf::st_bbox(bounds_sf)
@@ -44,6 +44,10 @@ download_overlay <- function(bounds_sf, zoomlevel, cache_dir, image_provider,
     repeat_tile_download <- purrr::insistently(retrieve_tiles, rate, quiet=T)
 
     nc_esri <- repeat_tile_download()
+
+    if (!is.null(dem)){
+      nc_esri <- terra::crop(nc_esri, dem)
+    }
 
     # get bounds in EPSG::3857
     new_bbox <- sf::st_bbox(c(xmin=terra::bbox(nc_esri)[1],

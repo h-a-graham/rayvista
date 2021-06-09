@@ -5,17 +5,20 @@
 #' scene can be carried out using a range of {rayshaer} functions
 #'
 #' @param lat numeric vector of degrees latitude (WGS84)
-#' @param long numeric vecotr of deegrees longitude (WGS84)
+#' @param long numeric vector of degrees longitude (WGS84)
 #' @param radius numeric vector - the search radius which will define the
 #' bounding box area.
 #' @param req_area Default is `NULL`. If desired, you can porvide an {sf} obect
 #' or an sf readable file path. If used, lat/long/radius are ignored. Must have
 #' a valid CRS.
+#' @param dem Default is `NULL`. If desired you can provide your own elevation
+#' data here. If used, lat/long/radius are ignored. should be a RasterLayer or
+#' SpatRaster object or {raster} readable elevation file path.
 #' @param elevation_detail Default is `13`. Integer between (0:15) passed to
 #' `elevatr::get_elevation_raster`. determines the resolution of the returned
 #' DEM. see details...
 #' @param overlay_detail Default is `13`. Integer between (0:20) passed to
-#' `maptiles::get_tiles`
+#' `maptiles::get_tiles`. Values over 16 are likley to cause issues...
 #' @param elevation_src Default is `aws`. passed to `elevatr::get_elev_raster`.
 #' A character indicating which API to use. Currently supports "aws" and "gl3",
 #' "gl1", or "alos" from the OpenTopography API global datasets. "aws" is the
@@ -88,31 +91,43 @@
 #' cuillins <- plot_3d_vista(lat = .lat, long = .long)
 #' rayshader::render_snapshot(clear=TRUE)
 
-plot_3d_vista <- function(lat, long, radius=7000, req_area=NULL, elevation_detail=13,
-                         overlay_detail=13, elevation_src='aws',
-                         img_provider ="Esri.WorldImagery", zscale=2,
-                         cache_dir=tempdir(), fill_holes=TRUE,
-                         outlier_filter=NULL, epsg=4326, show_vista=TRUE,
-                         api_key=NULL, ...){
+plot_3d_vista <- function(lat, long, radius=7000, req_area=NULL, dem=NULL,
+                          elevation_detail=13, overlay_detail=13,
+                          elevation_src='aws', img_provider="Esri.WorldImagery",
+                          zscale=2, cache_dir=tempdir(), fill_holes=TRUE,
+                          outlier_filter=NULL, epsg=4326, show_vista=TRUE,
+                          api_key=NULL, ...){
 
   # check arguments: For now just returning the finalised cache directory
-  cache_sub <- arg_checks(cache_dir, img_provider, api_key)
+  cache_sub <- arg_checks(cache_dir, img_provider, api_key, req_area, dem)
+
 
   # set up initial extent
   if (!is.null(req_area)){
     req_extent <- define_extent_sf(req_area)
-  } else {
+  } else if (!is.null(dem)) {
+    dem_stuff <- define_extent_dem(dem)
+    req_extent <- dem_stuff$dem_extent
+    dem <- dem_stuff$dem
+  }
+  else {
     req_extent <- define_extent(lat=lat, long=long, radius=radius, epsg=epsg)
   }
 
 
   # get tiles for map overlay
   map_overlay <- download_overlay(req_extent, overlay_detail, cache_sub,
-                                  img_provider, api_key)
+                                  img_provider, api_key, dem)
 
   # get DEM
-  elevation_ras <- download_elevation(map_overlay$new_bounds, elevation_detail,
-                                      elevation_src, cache_sub, outlier_filter, fill_holes)
+  if (is.null(dem)) {
+    elevation_ras <- download_elevation(map_overlay$new_bounds, elevation_detail,
+                                        elevation_src, cache_sub, outlier_filter,
+                                        fill_holes)
+  } else {
+    elevation_ras <- dem
+  }
+
 
   # run rayshader function and or return matrix.
   elev_mat <- calling_dr_ray(map_overlay$overlay, elevation_ras, zscale, epsg,
