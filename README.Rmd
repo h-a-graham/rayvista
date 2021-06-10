@@ -28,7 +28,8 @@ to create the 3D scene or vista :wink:
 An [{rgl}](https://github.com/cran/rgl) window is opened which displays the vista
 and the user may then interact with it using a selection of functions provided
 by {rayshader} including: `render_snapshot`, `render_highquality`, 
-`render_compass`, etc. see the [rayshader function reference](https://www.rayshader.com/reference/index.html)
+`render_compass`, etc. see the 
+[rayshader function reference](https://www.rayshader.com/reference/index.html)
 for more details...
 
 You can access the data attribution from the returned matrix object.
@@ -58,12 +59,12 @@ knitr::opts_chunk$set(
 )
 set.seed(1001)
 ```
-
 Make sure to load rayshader so you can interact with the {rgl} window after 
 running `plot_3d_vista()`! In this example we first create a scene and then add
 additional features using the many rendering functions available from 
-[{rayshader}](https://www.rayshader.com/reference/index.html#section-manipulate-and-capture-d-maps)
-
+[{rayshader}](https://www.rayshader.com/reference/index.html#section-manipulate-and-capture-d-maps).
+Don't forget to use `?rayvista::plot_3d_vista` if you want more information on
+the different avalable arguments.
 ```{r BlaBheinn, message=FALSE, warning=FALSE, results='hide'}
 library(rayshader) 
 library(rayvista)
@@ -89,7 +90,6 @@ render_snapshot(clear=TRUE)
 
 Use [`rayshader::render_depth`](https://www.rayshader.com/reference/render_depth.html) 
 to generate a lovely depth of field effect.
-
 ```{r GoraBolshayaUdina, message=FALSE, warning=FALSE, results='hide'}
 
 GoraBolshayaUdina <- plot_3d_vista(lat=55.757338, long=160.526712, zscale=4, phi=20)
@@ -99,7 +99,6 @@ render_depth(focus=0.4, focallength = 30, clear=TRUE)
 
 Here's an example where we generate a render using 
 [`rayshader::render_highquality`](https://www.rayshader.com/reference/render_highquality.html).
-
 ```{r Yosemite, message=FALSE, warning=FALSE, results='hide'}
 Yosemite <- plot_3d_vista(lat=37.742501, long=-119.558298, zscale=5, zoom=0.5, 
                           theta=-65, windowsize =1200, phi=25)
@@ -111,7 +110,6 @@ You can also use a range of different overlays from the {maptiles} package. In
 this example we use the 'img_provider' argument and specify 'OpenStreetMap'. 
 Many other overlay maps are available - check out `?maptiles::get_tiles` for 
 more details.
-
 ```{r HopkinsNZ, message=FALSE, warning=FALSE, results='hide'}
 HopkinsNZ <- plot_3d_vista(lat=-44.042238, long=169.860985, radius=5000, overlay_detail = 14,
              elevation_detail=13, zscale=5, img_provider = 'OpenStreetMap',
@@ -126,9 +124,9 @@ render_highquality(lightdirection = c(60,120, 240),
 ```
 
 Here we don't show the vista - instead we retrieve the texture and matrix by
-using the argument: 'show_vista = F'. Then edit the colours with {magick} before
-generating the rgl window with rayshader::plot_3d. 
-
+using the argument: 'show_vista = F'. Then edit the colours with 
+[{magick}](https://docs.ropensci.org/magick/) before generating the rgl window 
+with `rayshader::plot_3d`. 
 ```{r SistanSuture, message=FALSE, warning=FALSE, results='hide'}
 # install.packages('magick')
 library(magick)
@@ -159,9 +157,9 @@ render_highquality(lightaltitude = 40, clear=TRUE)
 ```
 
 This example makes use of the 'req_area' argument which allows the user to 
-supply an sf object (or alternatively an sf readable file path) to request an 
-an area which is based off the extent of the sf object.
-
+supply an [{sf}](https://r-spatial.github.io/sf/) object (or alternatively an 
+sf readable file path) to request an an area which is derived from the extent of 
+the sf object.
 ```{r MonterayBay, message=FALSE, warning=FALSE, results='hide'}
 monteray_ext <- attr(montereybay, 'extent')
 monteray_area <- sf::st_bbox(c(xmin=monteray_ext[1],
@@ -178,9 +176,13 @@ render_snapshot(clear=TRUE)
 ```
 
 Finally it is also possible to provide your own elevation data, {rayvista} will
-then automatically add an overlay to your data! Here is an example using the 
-awesome [{terrainr}](https://docs.ropensci.org/terrainr/) package...
-
+then automatically add an overlay to your data! This is done using the 'dem'
+argument; this can be either: a RasterLayer (generated with 
+[{raster}](https://rspatial.github.io/raster/reference/raster-package.html)) or 
+SpatRaster (generated with 
+[{terra}](https://rspatial.github.io/terra/reference/terra-package.html)) or a 
+file path that can be read by {raster}. Here is an example using the awesome 
+[{terrainr}](https://docs.ropensci.org/terrainr/) package!
 ```{r mt_whitney, message=FALSE, warning=FALSE, results='hide'}
 # install.packages('terrainr')
 library(terrainr)

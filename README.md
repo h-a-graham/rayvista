@@ -44,7 +44,9 @@ Make sure to load rayshader so you can interact with the {rgl} window
 after running `plot_3d_vista()`! In this example we first create a scene
 and then add additional features using the many rendering functions
 available from
-[{rayshader}](https://www.rayshader.com/reference/index.html#section-manipulate-and-capture-d-maps)
+[{rayshader}](https://www.rayshader.com/reference/index.html#section-manipulate-and-capture-d-maps).
+Don’t forget to use `?rayvista::plot_3d_vista` if you want more
+information on the different avalable arguments.
 
 ``` r
 library(rayshader) 
@@ -116,7 +118,8 @@ render_highquality(lightdirection = c(60,120, 240),
 
 Here we don’t show the vista - instead we retrieve the texture and
 matrix by using the argument: ‘show\_vista = F’. Then edit the colours
-with {magick} before generating the rgl window with rayshader::plot\_3d.
+with [{magick}](https://docs.ropensci.org/magick/) before generating the
+rgl window with `rayshader::plot_3d`.
 
 ``` r
 # install.packages('magick')
@@ -150,8 +153,9 @@ render_highquality(lightaltitude = 40, clear=TRUE)
 ![](man/figures/SistanSuture-1.png)<!-- -->
 
 This example makes use of the ‘req\_area’ argument which allows the user
-to supply an sf object (or alternatively an sf readable file path) to
-request an an area which is based off the extent of the sf object.
+to supply an [{sf}](https://r-spatial.github.io/sf/) object (or
+alternatively an sf readable file path) to request an an area which is
+derived from the extent of the sf object.
 
 ``` r
 monteray_ext <- attr(montereybay, 'extent')
@@ -171,9 +175,14 @@ render_snapshot(clear=TRUE)
 ![](man/figures/MonterayBay-1.png)<!-- -->
 
 Finally it is also possible to provide your own elevation data,
-{rayvista} will then automatically add an overlay to your data! Here is
-an example using the awesome
-[{terrainr}](https://docs.ropensci.org/terrainr/) package…
+{rayvista} will then automatically add an overlay to your data! This is
+done using the ‘dem’ argument; this can be either: a RasterLayer
+(generated with
+[{raster}](https://rspatial.github.io/raster/reference/raster-package.html))
+or SpatRaster (generated with
+[{terra}](https://rspatial.github.io/terra/reference/terra-package.html))
+or a file path that can be read by {raster}. Here is an example using
+the awesome [{terrainr}](https://docs.ropensci.org/terrainr/) package!
 
 ``` r
 # install.packages('terrainr')
