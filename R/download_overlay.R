@@ -1,5 +1,5 @@
 download_overlay <- function(bounds_sf, zoomlevel, cache_dir, image_provider,
-                             api_key){
+                             api_key, dem){
 
   # get bounds and define cache naming
   bounds <- sf::st_bbox(bounds_sf)
@@ -25,7 +25,7 @@ download_overlay <- function(bounds_sf, zoomlevel, cache_dir, image_provider,
   } else {
     message('Downloading overlay...')
     # dowload tiles and compose raster (SpatRaster)
-    # Now with repeat attempts built in - up to 10.
+    # Now with repeat attempts built in - up to 5.
     retrieve_tiles <- function(){
       suppressWarnings(
         if (is.null(api_key)){
@@ -40,10 +40,14 @@ download_overlay <- function(bounds_sf, zoomlevel, cache_dir, image_provider,
 
     }
 
-    rate <- purrr::rate_backoff(max_times = 10)
+    rate <- purrr::rate_backoff(max_times = 5)
     repeat_tile_download <- purrr::insistently(retrieve_tiles, rate, quiet=T)
 
     nc_esri <- repeat_tile_download()
+
+    if (!is.null(dem)){
+      nc_esri <- terra::crop(nc_esri, dem)
+    }
 
     # get bounds in EPSG::3857
     new_bbox <- sf::st_bbox(c(xmin=terra::bbox(nc_esri)[1],

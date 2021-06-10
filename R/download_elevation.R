@@ -14,12 +14,12 @@ download_elevation <- function(bounds_sf, z, dem_src, cache_dir, outlier_filter,
     ras <- readRDS(cachepath)
   } else {
 
-    # download function - insistently request up to 10 times.
+    # download function - insistently request up to 5 times.
     retrieve_dem <- function(){
       elevatr::get_elev_raster(bounds_sf, z=z, clip='bbox',
                                neg_to_na = TRUE, verbose = F, src=dem_src)
     }
-    rate <- purrr::rate_backoff(max_times = 10)
+    rate <- purrr::rate_backoff(max_times = 5)
     repeat_dem_download <- purrr::insistently(retrieve_dem, rate, quiet=T)
     ras <-repeat_dem_download()
 

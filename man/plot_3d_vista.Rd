@@ -9,6 +9,7 @@ plot_3d_vista(
   long,
   radius = 7000,
   req_area = NULL,
+  dem = NULL,
   elevation_detail = 13,
   overlay_detail = 13,
   elevation_src = "aws",
@@ -26,7 +27,7 @@ plot_3d_vista(
 \arguments{
 \item{lat}{numeric vector of degrees latitude (WGS84)}
 
-\item{long}{numeric vecotr of deegrees longitude (WGS84)}
+\item{long}{numeric vector of degrees longitude (WGS84)}
 
 \item{radius}{numeric vector - the search radius which will define the
 bounding box area.}
@@ -35,12 +36,16 @@ bounding box area.}
 or an sf readable file path. If used, lat/long/radius are ignored. Must have
 a valid CRS.}
 
+\item{dem}{Default is `NULL`. If desired you can provide your own elevation
+data here. If used, lat/long/radius are ignored. should be a RasterLayer or
+SpatRaster object or {raster} readable elevation file path.}
+
 \item{elevation_detail}{Default is `13`. Integer between (0:15) passed to
 `elevatr::get_elevation_raster`. determines the resolution of the returned
 DEM. see details...}
 
 \item{overlay_detail}{Default is `13`. Integer between (0:20) passed to
-`maptiles::get_tiles`}
+`maptiles::get_tiles`. Values over 16 are likley to cause issues...}
 
 \item{elevation_src}{Default is `aws`. passed to `elevatr::get_elev_raster`.
 A character indicating which API to use. Currently supports "aws" and "gl3",

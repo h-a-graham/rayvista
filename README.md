@@ -40,9 +40,15 @@ devtools::install_github("h-a-graham/rayvista", dependencies=TRUE)
 
 ## Examples
 
+Make sure to load rayshader so you can interact with the {rgl} window
+after running `plot_3d_vista()`! In this example we first create a scene
+and then add additional features using the many rendering functions
+available from
+[{rayshader}](https://www.rayshader.com/reference/index.html#section-manipulate-and-capture-d-maps).
+Don’t forget to use `?rayvista::plot_3d_vista` if you want more
+information on the different avalable arguments.
+
 ``` r
-# Make sure to lod rayshader so you can interact with the {rgl} window after 
-# running `plot_3d_vista()`
 library(rayshader) 
 library(rayvista)
 
@@ -66,6 +72,10 @@ render_snapshot(clear=TRUE)
 
 ![](man/figures/BlaBheinn-1.png)<!-- -->
 
+Use
+[`rayshader::render_depth`](https://www.rayshader.com/reference/render_depth.html)
+to generate a lovely depth of field effect.
+
 ``` r
 GoraBolshayaUdina <- plot_3d_vista(lat=55.757338, long=160.526712, zscale=4, phi=20)
 
@@ -73,6 +83,9 @@ render_depth(focus=0.4, focallength = 30, clear=TRUE)
 ```
 
 ![](man/figures/GoraBolshayaUdina-1.png)<!-- -->
+
+Here’s an example where we generate a render using
+[`rayshader::render_highquality`](https://www.rayshader.com/reference/render_highquality.html).
 
 ``` r
 Yosemite <- plot_3d_vista(lat=37.742501, long=-119.558298, zscale=5, zoom=0.5, 
@@ -82,6 +95,11 @@ render_highquality(clear=TRUE)
 ```
 
 ![](man/figures/Yosemite-1.png)<!-- -->
+
+You can also use a range of different overlays from the {maptiles}
+package. In this example we use the ‘img\_provider’ argument and specify
+‘OpenStreetMap’. Many other overlay maps are available - check out
+`?maptiles::get_tiles` for more details.
 
 ``` r
 HopkinsNZ <- plot_3d_vista(lat=-44.042238, long=169.860985, radius=5000, overlay_detail = 14,
@@ -98,10 +116,15 @@ render_highquality(lightdirection = c(60,120, 240),
 
 ![](man/figures/HopkinsNZ-1.png)<!-- -->
 
+Here we don’t show the vista - instead we retrieve the texture and
+matrix by using the argument: ‘show\_vista = F’. Then edit the colours
+with [{magick}](https://docs.ropensci.org/magick/) before generating the
+rgl window with `rayshader::plot_3d`.
+
 ``` r
+# install.packages('magick')
 library(magick)
-# here we don't show the vista - instead we retrieve the texture and matrix by
-# using the argument: 'show_vista = F'.
+
 sistan_suture<- plot_3d_vista(27.82153210664024, 60.5107976729012,radius=15000,
                               overlay_detail = 13, elevation_detail=10,
                               show_vista = FALSE)
@@ -128,3 +151,58 @@ render_highquality(lightaltitude = 40, clear=TRUE)
 ```
 
 ![](man/figures/SistanSuture-1.png)<!-- -->
+
+This example makes use of the ‘req\_area’ argument which allows the user
+to supply an [{sf}](https://r-spatial.github.io/sf/) object (or
+alternatively an sf readable file path) to request an an area which is
+derived from the extent of the sf object.
+
+``` r
+monteray_ext <- attr(montereybay, 'extent')
+monteray_area <- sf::st_bbox(c(xmin=monteray_ext[1],
+                               ymin=monteray_ext[3],
+                               xmax=monteray_ext[2],
+                               ymax=monteray_ext[4])) %>%
+  sf::st_as_sfc() %>%
+  sf::st_sf(crs=attr(montereybay, 'crs'))
+
+mray <- plot_3d_vista(req_area = monteray_area, phi=30, elevation_detail = 10,
+                      overlay_detail = 11, zscale=20, elevation_src = 'gl3',
+                      fill_holes=FALSE,theta = -70, zoom=0.4, windowsize=1200)
+render_snapshot(clear=TRUE)
+```
+
+![](man/figures/MonterayBay-1.png)<!-- -->
+
+Finally it is also possible to provide your own elevation data,
+{rayvista} will then automatically add an overlay to your data! This is
+done using the ‘dem’ argument; this can be either: a RasterLayer
+(generated with
+[{raster}](https://rspatial.github.io/raster/reference/raster-package.html))
+or SpatRaster (generated with
+[{terra}](https://rspatial.github.io/terra/reference/terra-package.html))
+or a file path that can be read by {raster}. Here is an example using
+the awesome [{terrainr}](https://docs.ropensci.org/terrainr/) package!
+
+``` r
+# install.packages('terrainr')
+library(terrainr)
+library(sf)
+
+mt_whitney_area <- data.frame(id = seq(1, 100, 1),
+                              lat = runif(100, 36.564595, 36.599828),
+                              lng = runif(100, -118.319322, -118.266924)) %>%
+  st_as_sf(., coords = c("lng", "lat")) %>%
+  st_set_crs(., 4326)
+
+mw_tiles <- get_tiles(mt_whitney_area,
+                      services = c("elevation"),
+                      resolution = 5)
+
+out <- plot_3d_vista(dem=mw_tiles$elevation, overlay_detail = 16, zscale=5,
+                     windowsize=1200,zoom=0.5, theta=240, phi=25, solid=FALSE)
+
+render_snapshot(clear=TRUE)
+```
+
+![](man/figures/mt_whitney-1.png)<!-- -->

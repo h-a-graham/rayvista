@@ -1,4 +1,9 @@
-arg_checks <- function(cache_dir, image_provider, api_key){
+arg_checks <- function(cache_dir, image_provider, api_key, req_area, dem){
+
+  if (!is.null(req_area) & !is.null(dem)){
+    stop('Values provided for both `req_area` and  `dem`. You can only request
+         one or the other, not both.')
+  }
 
   # check cache directory and create if needed.
   if (!dir.exists(cache_dir)) dir.create(cache_dir)
@@ -18,5 +23,6 @@ arg_checks <- function(cache_dir, image_provider, api_key){
   if (is.null(api_key)) {stop("A valid API key is required for Thuderforest maps.
   See: https://www.thunderforest.com/docs/apikeys/")}
   }
+
   return(cache_sub)
 }
