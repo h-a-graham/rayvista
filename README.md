@@ -61,7 +61,7 @@ render_label(heightmap= cuillins, text='Bla Bheinn: 928 m', lat = .lat,
              long=.long, extent = attr(cuillins, 'extent'),altitude=600,
              clear_previous = T, zscale = 2)
 
-render_compass()
+render_compass() 
 
 render_scalebar(limits=c(
   round(dim(cuillins)[2]*attr(cuillins, 'resolution')/1000,1)),
@@ -88,10 +88,11 @@ Here’s an example where we generate a render using
 [`rayshader::render_highquality`](https://www.rayshader.com/reference/render_highquality.html).
 
 ``` r
-Yosemite <- plot_3d_vista(lat=37.742501, long=-119.558298, zscale=5, zoom=0.5, 
-                          theta=-65, windowsize =1200, phi=25)
+Yosemite <- plot_3d_vista(lat=37.742501, long=-119.558298, zscale=5, zoom=0.5,
+                          overlay_detail=14, theta=-65, windowsize =1200, 
+                          phi=25)
 
-render_highquality(clear=TRUE)
+render_highquality(lightdirection = 40, clear=TRUE)
 ```
 
 ![](man/figures/Yosemite-1.png)<!-- -->
