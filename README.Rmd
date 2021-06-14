@@ -104,7 +104,7 @@ Yosemite <- plot_3d_vista(lat=37.742501, long=-119.558298, zscale=5, zoom=0.5,
                           overlay_detail=14, theta=-65, windowsize =1200, 
                           phi=25)
 
-render_highquality(lightdirection = 40, clear=TRUE)
+render_highquality(lightdirection = 220, clear=TRUE)
 ```
 
 You can also use a range of different overlays from the {maptiles} package. In 
