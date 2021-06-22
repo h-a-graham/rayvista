@@ -40,12 +40,12 @@ a valid CRS.}
 data here. If used, lat/long/radius are ignored. should be a RasterLayer or
 SpatRaster object or {raster} readable elevation file path.}
 
-\item{elevation_detail}{Default is `13`. Integer between (0:15) passed to
+\item{elevation_detail}{Default is `13`. Integer between (0:14) passed to
 `elevatr::get_elevation_raster`. determines the resolution of the returned
 DEM. see details...}
 
 \item{overlay_detail}{Default is `13`. Integer between (0:20) passed to
-`maptiles::get_tiles`. Values over 16 are likley to cause issues...}
+`maptiles::get_tiles`. Values over 16 are likely to cause issues...}
 
 \item{elevation_src}{Default is `aws`. passed to `elevatr::get_elev_raster`.
 A character indicating which API to use. Currently supports "aws" and "gl3",

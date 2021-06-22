@@ -14,11 +14,11 @@
 #' @param dem Default is `NULL`. If desired you can provide your own elevation
 #' data here. If used, lat/long/radius are ignored. should be a RasterLayer or
 #' SpatRaster object or {raster} readable elevation file path.
-#' @param elevation_detail Default is `13`. Integer between (0:15) passed to
+#' @param elevation_detail Default is `13`. Integer between (0:14) passed to
 #' `elevatr::get_elevation_raster`. determines the resolution of the returned
 #' DEM. see details...
 #' @param overlay_detail Default is `13`. Integer between (0:20) passed to
-#' `maptiles::get_tiles`. Values over 16 are likley to cause issues...
+#' `maptiles::get_tiles`. Values over 16 are likely to cause issues...
 #' @param elevation_src Default is `aws`. passed to `elevatr::get_elev_raster`.
 #' A character indicating which API to use. Currently supports "aws" and "gl3",
 #' "gl1", or "alos" from the OpenTopography API global datasets. "aws" is the
@@ -99,7 +99,12 @@ plot_3d_vista <- function(lat, long, radius=7000, req_area=NULL, dem=NULL,
                           api_key=NULL, ...){
 
   # check arguments: For now just returning the finalised cache directory
-  cache_sub <- arg_checks(cache_dir, img_provider, api_key, req_area, dem)
+  checked_args <- arg_checks(cache_dir, img_provider, api_key, req_area, dem,
+                          elevation_detail, overlay_detail)
+
+  cache_sub <- checked_args$cache_sub
+  elevation_detail <- checked_args$elevation_detail
+
 
 
   # set up initial extent
