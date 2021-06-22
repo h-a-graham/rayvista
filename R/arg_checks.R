@@ -1,4 +1,5 @@
-arg_checks <- function(cache_dir, image_provider, api_key, req_area, dem){
+arg_checks <- function(cache_dir, image_provider, api_key, req_area, dem,
+                       elevation_detail, overlay_detail){
 
   if (!is.null(req_area) & !is.null(dem)){
     stop('Values provided for both `req_area` and  `dem`. You can only request
@@ -24,5 +25,16 @@ arg_checks <- function(cache_dir, image_provider, api_key, req_area, dem){
   See: https://www.thunderforest.com/docs/apikeys/")}
   }
 
-  return(cache_sub)
+  if (elevation_detail > 14){
+    message(sprintf('elevation detail > 14 (the max). 14 will be used instead of %s', 15))
+    elevation_detail <- 14
+  }
+
+  if (overlay_detail > 16){
+    message('overlay_detail > 16! This is risky and may result in an error or funny looking overlays...')
+  }
+
+
+
+  return(list(cache_sub=cache_sub, elevation_detail=elevation_detail))
 }

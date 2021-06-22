@@ -41,7 +41,7 @@ download_overlay <- function(bounds_sf, zoomlevel, cache_dir, image_provider,
     }
 
     rate <- purrr::rate_backoff(max_times = 5)
-    repeat_tile_download <- purrr::insistently(retrieve_tiles, rate, quiet=T)
+    repeat_tile_download <- purrr::insistently(retrieve_tiles, rate, quiet=F)
 
     nc_esri <- repeat_tile_download()
 
@@ -55,7 +55,7 @@ download_overlay <- function(bounds_sf, zoomlevel, cache_dir, image_provider,
                               xmax=terra::bbox(nc_esri)[3],
                               ymax=terra::bbox(nc_esri)[4])) %>%
       sf::st_as_sfc() %>%
-      sf::st_sf(crs=terra::crs(nc_esri, proj4=T))
+      sf::st_sf(crs=terra::crs(nc_esri))
 
     saveRDS(new_bbox, file=bbox_cache)
 
