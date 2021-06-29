@@ -65,10 +65,11 @@ download_overlay <- function(bounds_sf, zoomlevel, cache_dir, image_provider,
     suppressWarnings(terra::writeRaster(nc_esri, over_cache, verbose=F))
     overlay_img <- png::readPNG(over_cache) %>%
       scales::rescale(.,to=c(0,1))
-    if (overlay_alpha!=1){
-      overlay_img[,,4] <- as.integer(overlay_img[,,4]) * overlay_alpha
-    }
 
+  }
+
+  if (overlay_alpha!=1){
+    overlay_img[,,4] <- as.integer(overlay_img[,,4]) * overlay_alpha
   }
 
   return(list(overlay=overlay_img, new_bounds=new_bbox))
