@@ -1,5 +1,5 @@
 download_overlay <- function(bounds_sf, zoomlevel, cache_dir, image_provider,
-                             api_key, dem){
+                             api_key, dem, overlay_alpha){
 
   # get bounds and define cache naming
   bounds <- sf::st_bbox(bounds_sf)
@@ -8,12 +8,14 @@ download_overlay <- function(bounds_sf, zoomlevel, cache_dir, image_provider,
   over_cache <- file.path(cache_dir, paste0('overlay', bounds[1], '_',
                                             bounds[2], '_', bounds[3],'_',
                                             bounds[4], '_' , zoomlevel, '_',
-                                            image_provider,'.png'))
+                                            image_provider,'_', overlay_alpha,
+                                            '.png'))
 
   bbox_cache <- file.path(cache_dir, paste0('bbox', bounds[1], '_',
                                             bounds[2], '_', bounds[3],'_',
                                             bounds[4], '_' , zoomlevel, '_',
-                                            image_provider, '.rds'))
+                                            image_provider,'_', overlay_alpha,
+                                            '.rds'))
 
   # check cache filename and if it doesn't exist download data then save.
   if (file.exists(over_cache) && file.exists(bbox_cache)) {
@@ -63,6 +65,10 @@ download_overlay <- function(bounds_sf, zoomlevel, cache_dir, image_provider,
     suppressWarnings(terra::writeRaster(nc_esri, over_cache, verbose=F))
     overlay_img <- png::readPNG(over_cache) %>%
       scales::rescale(.,to=c(0,1))
+    if (overlay_alpha!=1){
+      overlay_img[,,4] <- as.integer(overlay_img[,,4]) * overlay_alpha
+    }
+
   }
 
   return(list(overlay=overlay_img, new_bounds=new_bbox))
