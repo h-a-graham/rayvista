@@ -176,7 +176,7 @@ mray <- plot_3d_vista(req_area = monteray_area, phi=30, elevation_detail = 10,
 render_snapshot(clear=TRUE)
 ```
 
-Finally it is also possible to provide your own elevation data, {rayvista} will
+It is also possible to provide your own elevation data, {rayvista} will
 then automatically add an overlay to your data! This is done using the 'dem'
 argument; this can be either: a RasterLayer (generated with 
 [{raster}](https://rspatial.github.io/raster/reference/raster-package.html)) or 
@@ -201,6 +201,27 @@ mw_tiles <- get_tiles(mt_whitney_area,
 
 out <- plot_3d_vista(dem=mw_tiles$elevation, overlay_detail = 16, zscale=5,
                      windowsize=1200,zoom=0.5, theta=240, phi=25, solid=FALSE)
+
+render_snapshot(clear=TRUE)
+```
+
+In this example, we take full advantage of rayshader's capabilities. We use the
+`show_vista=F` argument in addition to the `overlay_alpha` which sets the 
+transparency of the overlay. Then we can use the returned dem_matrix and texture
+values to build a shaded model with rayshader and add the semi-transparent 
+overlay.
+
+```{r la_palma, message=FALSE, warning=FALSE, results='hide'}
+lapalmaTF<- plot_3d_vista(lat=28.719946, long=-17.867091,radius=30000, 
+                          overlay_detail=13, overlay_alpha = 0.6, 
+                          elevation_detail=11, show_vista = F)
+
+lapalmaTF$dem_matrix %>%
+  height_shade()%>%
+  add_shadow(ray_shade(lapalmaTF$dem_matrix, zscale=20), 0.2) %>%
+  add_overlay(., lapalmaTF$texture,rescale_original=TRUE) %>%
+  plot_3d(., lapalmaTF$dem_matrix, zscale=20,
+          windowsize = 1200, zoom=0.25, phi=30, theta=45)
 
 render_snapshot(clear=TRUE)
 ```

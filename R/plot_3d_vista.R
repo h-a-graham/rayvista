@@ -19,6 +19,9 @@
 #' DEM. see details...
 #' @param overlay_detail Default is `13`. Integer between (0:20) passed to
 #' `maptiles::get_tiles`. Values over 16 are likely to cause issues...
+#' @param overlay_alpha Default is `1`. Numeric vector between 0 and 1. Sets the
+#' value of the alpha channel of the overlay; 0 is transparent, 1 is solid.
+#' This is particualrly useful when working with`rayshader::add_overlay`.
 #' @param elevation_src Default is `aws`. passed to `elevatr::get_elev_raster`.
 #' A character indicating which API to use. Currently supports "aws" and "gl3",
 #' "gl1", or "alos" from the OpenTopography API global datasets. "aws" is the
@@ -35,9 +38,8 @@
 #' @param cache_dir default is `tempdir()` but you can save your cache locally
 #' if desired. if using `tempdir()`, data will be removed when the R session
 #' closes.
-#' @param fill_holes Default `TRUE`. Fills NA values in DEM. Can slow in coastal
-#' regions, in which case set to FALSE. If NAs present in raster,
-#' `rayrender::render_scalebar` may not work.
+#' @param fill_holes Default `FALSE`. Fills NA values in DEM. Can be slow in
+#' coastal regions, in which case set to FALSE.
 #' @param outlier_filter numeric between `(0:1)`. default is NULL. sometimes the
 #' returned terrain data has erroneous low values. if this occurs set this value
 #' to 0.001 or similar to remove 1\% of the lowest values.
@@ -92,9 +94,9 @@
 #' rayshader::render_snapshot(clear=TRUE)
 
 plot_3d_vista <- function(lat, long, radius=7000, req_area=NULL, dem=NULL,
-                          elevation_detail=13, overlay_detail=13,
+                          elevation_detail=13, overlay_detail=13, overlay_alpha=1,
                           elevation_src='aws', img_provider="Esri.WorldImagery",
-                          zscale=2, cache_dir=tempdir(), fill_holes=TRUE,
+                          zscale=2, cache_dir=tempdir(), fill_holes=FALSE,
                           outlier_filter=NULL, epsg=4326, show_vista=TRUE,
                           api_key=NULL, ...){
 
@@ -122,7 +124,7 @@ plot_3d_vista <- function(lat, long, radius=7000, req_area=NULL, dem=NULL,
 
   # get tiles for map overlay
   map_overlay <- download_overlay(req_extent, overlay_detail, cache_sub,
-                                  img_provider, api_key, dem)
+                                  img_provider, api_key, dem, overlay_alpha)
 
   # get DEM
   if (is.null(dem)) {
