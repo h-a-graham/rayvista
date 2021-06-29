@@ -8,13 +8,13 @@ download_overlay <- function(bounds_sf, zoomlevel, cache_dir, image_provider,
   over_cache <- file.path(cache_dir, paste0('overlay', bounds[1], '_',
                                             bounds[2], '_', bounds[3],'_',
                                             bounds[4], '_' , zoomlevel, '_',
-                                            image_provider,'_', overlay_alpha,
+                                            image_provider,'_',
                                             '.png'))
 
   bbox_cache <- file.path(cache_dir, paste0('bbox', bounds[1], '_',
                                             bounds[2], '_', bounds[3],'_',
                                             bounds[4], '_' , zoomlevel, '_',
-                                            image_provider,'_', overlay_alpha,
+                                            image_provider,'_',
                                             '.rds'))
 
   # check cache filename and if it doesn't exist download data then save.
