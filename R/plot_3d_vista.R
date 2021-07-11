@@ -23,9 +23,8 @@
 #' value of the alpha channel of the overlay; 0 is transparent, 1 is solid.
 #' This is particualrly useful when working with`rayshader::add_overlay`.
 #' @param elevation_src Default is `aws`. passed to `elevatr::get_elev_raster`.
-#' A character indicating which API to use. Currently supports "aws" and "gl3",
-#' "gl1", or "alos" from the OpenTopography API global datasets. "aws" is the
-#' default.
+#' A character indicating which API to use. Currently supports "aws", "gl3",
+#' "gl1", "alos" or 'srtm15plus' from the OpenTopography API global datasets.
 #' This determines the detail of the imagery. see details...
 #' @param img_provider Default is 'Esri.WorldImagery'. The name of the tile
 #' server provider. See details for other options
