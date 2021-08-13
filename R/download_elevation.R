@@ -23,6 +23,10 @@ download_elevation <- function(bounds_sf, z, dem_src, cache_dir, outlier_filter,
     repeat_dem_download <- purrr::insistently(retrieve_dem, rate, quiet=F)
     ras <-repeat_dem_download()
 
+    if (dem_src=='aws'){
+      ras <- raster::crop(ras, bounds)
+    }
+
     # fill holes in DEMS
     if (isTRUE(fill_holes)){
       if (length(ras[is.na(ras)])>0) {
