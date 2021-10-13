@@ -52,10 +52,10 @@ download_overlay <- function(bounds_sf, zoomlevel, cache_dir, image_provider,
     }
 
     # get bounds in EPSG::3857
-    new_bbox <- sf::st_bbox(c(xmin=terra::bbox(nc_esri)[1],
-                              ymin=terra::bbox(nc_esri)[2],
-                              xmax=terra::bbox(nc_esri)[3],
-                              ymax=terra::bbox(nc_esri)[4])) %>%
+    new_bbox <- sf::st_bbox(c(xmin=as.numeric(terra::ext(nc_esri)[1]),
+                              ymin=as.numeric(terra::ext(nc_esri)[3]),
+                              xmax=as.numeric(terra::ext(nc_esri)[2]),
+                              ymax=as.numeric(terra::ext(nc_esri)[4]))) %>%
       sf::st_as_sfc() %>%
       sf::st_sf(crs=terra::crs(nc_esri))
 
