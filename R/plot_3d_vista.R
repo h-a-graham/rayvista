@@ -1,8 +1,8 @@
 #' Generate a 3D scene with an overlay map.
 #'
 #' This function is a plugin for the {rayshader} package. It opens an {rgl}
-#' window displaying the requested 3D scene or vista. further processing of the
-#' scene can be carried out using a range of {rayshaer} functions
+#' window displaying the requested 3D scene or vista. Further processing of the
+#' scene can be carried out using a range of {rayshader} functions
 #'
 #' @param lat numeric vector of degrees latitude (WGS84)
 #' @param long numeric vector of degrees longitude (WGS84)
