@@ -103,8 +103,8 @@ A elevation matrix including 'extent' and 'crs' attributes.
 }
 \description{
 This function is a plugin for the {rayshader} package. It opens an {rgl}
-window displaying the requested 3D scene or vista. further processing of the
-scene can be carried out using a range of {rayshaer} functions
+window displaying the requested 3D scene or vista. Further processing of the
+scene can be carried out using a range of {rayshader} functions
 }
 \details{
 elevation_detail: For details on zoom and resolution see the documentation

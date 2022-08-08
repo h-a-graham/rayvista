@@ -55,7 +55,7 @@ library(rayvista)
 .lat <- 57.219566
 .long <- -6.092690
 
-cuillins <- plot_3d_vista(lat = .lat, long = .long, phi=30)
+cuillins <- plot_3d_vista(lat = .lat, long = .long, phi=30, outlier_filter=0.001)
 
 render_label(heightmap= cuillins, text='Bla Bheinn: 928 m', lat = .lat,
              long=.long, extent = attr(cuillins, 'extent'),altitude=600,
@@ -79,7 +79,7 @@ to generate a lovely depth of field effect.
 ``` r
 GoraBolshayaUdina <- plot_3d_vista(lat=55.757338, long=160.526712, zscale=4, phi=20)
 
-render_depth(focus=0.4, focallength = 30, clear=TRUE)
+render_depth(focus=0.4, focallength = 16, clear=TRUE)
 ```
 
 ![](man/figures/GoraBolshayaUdina-1.png)<!-- -->
@@ -98,7 +98,7 @@ render_highquality(lightdirection = 220, clear=TRUE)
 ![](man/figures/Yosemite-1.png)<!-- -->
 
 You can also use a range of different overlays from the {maptiles}
-package. In this example we use the ‘img\_provider’ argument and specify
+package. In this example we use the ‘img_provider’ argument and specify
 ‘OpenStreetMap’. Many other overlay maps are available - check out
 `?maptiles::get_tiles` for more details.
 
@@ -118,7 +118,7 @@ render_highquality(lightdirection = c(60,120, 240),
 ![](man/figures/HopkinsNZ-1.png)<!-- -->
 
 Here we don’t show the vista - instead we retrieve the texture and
-matrix by using the argument: ‘show\_vista = F’. Then edit the colours
+matrix by using the argument: ‘show_vista = F’. Then edit the colours
 with [{magick}](https://docs.ropensci.org/magick/) before generating the
 rgl window with `rayshader::plot_3d`.
 
@@ -153,7 +153,7 @@ render_highquality(lightaltitude = 40, clear=TRUE)
 
 ![](man/figures/SistanSuture-1.png)<!-- -->
 
-This example makes use of the ‘req\_area’ argument which allows the user
+This example makes use of the ‘req_area’ argument which allows the user
 to supply an [{sf}](https://r-spatial.github.io/sf/) object (or
 alternatively an sf readable file path) to request an an area which is
 derived from the extent of the sf object.
@@ -210,8 +210,8 @@ render_snapshot(clear=TRUE)
 In this example, we take full advantage of rayshader’s capabilities. We
 use the `show_vista=F` argument in addition to the `overlay_alpha` which
 sets the transparency of the overlay. Then we can use the returned
-dem\_matrix and texture values to build a shaded model with rayshader
-and add the semi-transparent overlay.
+dem_matrix and texture values to build a shaded model with rayshader and
+add the semi-transparent overlay.
 
 ``` r
 lapalmaTF<- plot_3d_vista(lat=28.719946, long=-17.867091,radius=30000, 
