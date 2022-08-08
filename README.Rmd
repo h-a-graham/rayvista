@@ -72,7 +72,7 @@ library(rayvista)
 .lat <- 57.219566
 .long <- -6.092690
 
-cuillins <- plot_3d_vista(lat = .lat, long = .long, phi=30)
+cuillins <- plot_3d_vista(lat = .lat, long = .long, phi=30, outlier_filter=0.001)
 
 render_label(heightmap= cuillins, text='Bla Bheinn: 928 m', lat = .lat,
              long=.long, extent = attr(cuillins, 'extent'),altitude=600,
@@ -94,7 +94,7 @@ to generate a lovely depth of field effect.
 
 GoraBolshayaUdina <- plot_3d_vista(lat=55.757338, long=160.526712, zscale=4, phi=20)
 
-render_depth(focus=0.4, focallength = 30, clear=TRUE)
+render_depth(focus=0.4, focallength = 16, clear=TRUE)
 ```
 
 Here's an example where we generate a render using 
