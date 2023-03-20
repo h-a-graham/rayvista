@@ -89,7 +89,7 @@
 #' .lat <- 57.21956608144513
 #' .long <- -6.092690805001252
 #'
-#' cuillins <- plot_3d_vista(lat = .lat, long = .long)
+#' cuillins <- plot_3d_vista(lat = .lat, long = .long, outlier_filter=0.001)
 #' rayshader::render_snapshot(clear=TRUE)
 
 plot_3d_vista <- function(lat, long, radius=7000, req_area=NULL, dem=NULL,
